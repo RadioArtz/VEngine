@@ -3,7 +3,7 @@
 #include <iostream>
 #include "Window/VgineWindow.h"
 
-VgineWindow::VgineWindow() { }
+VgineWindow::VgineWindow() { NewWindow(); }
 
 void Framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
