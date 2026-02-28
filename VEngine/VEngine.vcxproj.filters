@@ -27,12 +27,18 @@
     <ClCompile Include="src\private\Rendering\Shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\private\IO\FilesystemExtensions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\public\Window\VgineWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\public\Rendering\Shader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\public\IO\FilesystemExtensions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

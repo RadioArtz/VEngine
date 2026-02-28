@@ -4,6 +4,8 @@
 #include <iostream>
 #include <Window/VgineWindow.h>
 #include <Rendering/Shader.h>
+#include "IO/FilesystemExtensions.h"
+#include <filesystem>
 
 
 void InputTick(GLFWwindow* window);
@@ -54,6 +56,10 @@ unsigned int EBO;
 
 int EngineInit() 
 {
+    std::string exeLocation = FilesystemExtensions::GetExeLocation();
+    std::filesystem::path programRoot = std::filesystem::path(exeLocation).parent_path();
+    std::filesystem::current_path(programRoot);
+
     glfwInit();
     EngineWindow = new VgineWindow();
     GLFWwindow* GLWindow = EngineWindow->GetInternalGLFWwindow();
@@ -96,11 +102,11 @@ void ExitToDesktop()
 void PrepareShader() 
 {
     Shader VertexShader = Shader();
-    VertexShader.SetShaderSource("content/shaders/unlitDefault.vert", EShaderType::Vertex);
+    VertexShader.SetShaderSource("game/content/shaders/unlitDefault.vert", EShaderType::Vertex);
     VertexShader.CompileShader();
 
     Shader FragmentShader = Shader();
-    FragmentShader.SetShaderSource("content/shaders/unlitDefault.frag", EShaderType::Fragment);
+    FragmentShader.SetShaderSource("game/content/shaders/unlitDefault.frag", EShaderType::Fragment);
     FragmentShader.CompileShader();
 
     shaderProgram = glCreateProgram();
