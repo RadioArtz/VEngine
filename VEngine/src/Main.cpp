@@ -3,12 +3,22 @@
 #include <glm/glm.hpp>
 #include <iostream>
 #include <Window/VgineWindow.h>
+#include <Rendering/Shader.h>
+
 
 void InputTick(GLFWwindow* window);
 void ExitToDesktop();
 void RenderTick();
 void PrepareShader();
+int EngineInit();
 VgineWindow* EngineWindow;
+
+#ifdef _DEBUG
+    int main() { return EngineInit(); }
+#else
+    int WinMain() { return EngineInit(); }
+#endif
+
 #pragma region shaders
 
 const char* vertexShaderSource = "#version 330 core\n"
@@ -27,14 +37,14 @@ const char* fragmentShaderSource = "#version 330 core\n"
 
 unsigned int shaderProgram;
 float vertices[] = {
-     0.5f,  0.5f, 0.0f,  // top right
-     0.5f, -0.5f, 0.0f,  // bottom right
-    -0.5f, -0.5f, 0.0f,  // bottom left
-    -0.5f,  0.5f, 0.0f   // top left 
+     0.5f,  0.5f, 0.0f,
+     0.5f, -0.5f, 0.0f,
+    -0.5f, -0.5f, 0.0f,
+    -0.5f,  0.5f, 0.0f
 };
-unsigned int indices[] = {  // note that we start from 0!
-    0, 1, 3,   // first triangle
-    1, 2, 3    // second triangle
+unsigned int indices[] = {
+    0, 1, 3,
+    1, 2, 3
 };
 
 unsigned int VBO;
@@ -42,7 +52,7 @@ unsigned int VAO;
 unsigned int EBO;
 #pragma endregion
 
-int main() 
+int EngineInit() 
 {
     glfwInit();
     EngineWindow = new VgineWindow();
@@ -56,6 +66,7 @@ int main()
         glfwPollEvents();
     }
     glfwTerminate();
+    std::cout << "Closed Engine Window!" << std::endl;
     return 0;
 }
 
@@ -64,7 +75,6 @@ void InputTick(GLFWwindow* window)
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         ExitToDesktop();
 }
-
 
 void RenderTick() 
 {
@@ -81,27 +91,30 @@ void ExitToDesktop()
 {
     std::cout << "Preparing to Exit..." << std::endl;
     glfwSetWindowShouldClose(EngineWindow->GetInternalGLFWwindow(), true);
-    std::cout << "Closed Engine Window!" << std::endl;
 }
 
 void PrepareShader() 
 {
-    unsigned int vertexShader;
+    //unsigned int vertexShader;
+    Shader VertexShader = Shader();
+    VertexShader.SetShaderSource("unlitDefault.vert", EShaderType::Vertex);
+    VertexShader.CompileShader();
+    /*
     vertexShader = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-    glCompileShader(vertexShader);
+    glCompileShader(vertexShader);*/
 
-    unsigned int fragmentShader;
+    unsigned int fragmentShader = -1;
     fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
     glCompileShader(fragmentShader);
 
     shaderProgram = glCreateProgram();
-    glAttachShader(shaderProgram, vertexShader);
+    glAttachShader(shaderProgram, VertexShader.GetShaderID());
     glAttachShader(shaderProgram, fragmentShader);
     glLinkProgram(shaderProgram);
 
-    glDeleteShader(vertexShader);
+    glDeleteShader(VertexShader.GetShaderID());
     glDeleteShader(fragmentShader);
 
     glGenBuffers(1, &VBO);
