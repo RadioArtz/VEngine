@@ -97,7 +97,7 @@ void PrepareShader()
 {
     //unsigned int vertexShader;
     Shader VertexShader = Shader();
-    VertexShader.SetShaderSource("unlitDefault.vert", EShaderType::Vertex);
+    VertexShader.SetShaderSource("content/shaders/unlitDefault.vert", EShaderType::Vertex);
     VertexShader.CompileShader();
     /*
     vertexShader = glCreateShader(GL_VERTEX_SHADER);
