@@ -4,6 +4,9 @@
 #include <filesystem>
 #include <iostream>
 
+Shader::Shader(){}
+Shader::~Shader() { glDeleteShader(ShaderID); }
+
 int Shader::CompileShader()
 {
 	int Shader = glCreateShader(VShaderTypeToGLShaderEnum(ShaderType));
@@ -42,4 +45,19 @@ int Shader::SetShaderSource(const std::string& inShaderPath, const EShaderType i
 		std::cout << "File " << inShaderPath << " does not exist!" << std::endl;
 		return -1;
 	}
+}
+
+ShaderProgram::ShaderProgram() { ProgramID = glCreateProgram(); }
+ShaderProgram::~ShaderProgram() { glDeleteProgram(ProgramID); }
+
+int ShaderProgram::AttachShader(int inShaderID)
+{
+	glAttachShader(ProgramID, inShaderID);
+	return 0;
+}
+
+int ShaderProgram::LinkProgram()
+{
+	glLinkProgram(ProgramID);
+	return 0;
 }

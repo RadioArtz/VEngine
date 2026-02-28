@@ -54,6 +54,8 @@ unsigned int VAO;
 unsigned int EBO;
 #pragma endregion
 
+ShaderProgram* Basic2DShader;
+
 int EngineInit() 
 {
     std::string exeLocation = FilesystemExtensions::GetExeLocation();
@@ -84,9 +86,10 @@ void InputTick(GLFWwindow* window)
 
 void RenderTick() 
 {
+    if(Basic2DShader->GetProgramID() != -1)
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
-    glUseProgram(shaderProgram);
+    glUseProgram(Basic2DShader->GetProgramID());
     glBindVertexArray(VAO);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
@@ -109,13 +112,10 @@ void PrepareShader()
     FragmentShader.SetShaderSource("game/content/shaders/unlitDefault.frag", EShaderType::Fragment);
     FragmentShader.CompileShader();
 
-    shaderProgram = glCreateProgram();
-    glAttachShader(shaderProgram, VertexShader.GetShaderID());
-    glAttachShader(shaderProgram, FragmentShader.GetShaderID());
-    glLinkProgram(shaderProgram);
-
-    glDeleteShader(VertexShader.GetShaderID());
-    glDeleteShader(FragmentShader.GetShaderID());
+    Basic2DShader = new ShaderProgram();
+    Basic2DShader->AttachShader(VertexShader.GetShaderID());
+    Basic2DShader->AttachShader(FragmentShader.GetShaderID());
+    Basic2DShader->LinkProgram();
 
     glGenBuffers(1, &VBO);
     glGenVertexArrays(1, &VAO);
