@@ -95,27 +95,21 @@ void ExitToDesktop()
 
 void PrepareShader() 
 {
-    //unsigned int vertexShader;
     Shader VertexShader = Shader();
     VertexShader.SetShaderSource("content/shaders/unlitDefault.vert", EShaderType::Vertex);
     VertexShader.CompileShader();
-    /*
-    vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-    glCompileShader(vertexShader);*/
 
-    unsigned int fragmentShader = -1;
-    fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
-    glCompileShader(fragmentShader);
+    Shader FragmentShader = Shader();
+    FragmentShader.SetShaderSource("content/shaders/unlitDefault.frag", EShaderType::Fragment);
+    FragmentShader.CompileShader();
 
     shaderProgram = glCreateProgram();
     glAttachShader(shaderProgram, VertexShader.GetShaderID());
-    glAttachShader(shaderProgram, fragmentShader);
+    glAttachShader(shaderProgram, FragmentShader.GetShaderID());
     glLinkProgram(shaderProgram);
 
     glDeleteShader(VertexShader.GetShaderID());
-    glDeleteShader(fragmentShader);
+    glDeleteShader(FragmentShader.GetShaderID());
 
     glGenBuffers(1, &VBO);
     glGenVertexArrays(1, &VAO);
