@@ -149,6 +149,7 @@
   <ItemGroup>
     <ClInclude Include="src\public\IO\FilesystemExtensions.h" />
     <ClInclude Include="src\public\Rendering\Shader.h" />
+    <ClInclude Include="src\public\Rendering\ShaderProgram.h" />
     <ClInclude Include="src\public\Window\VgineWindow.h" />
   </ItemGroup>
   <ItemGroup>

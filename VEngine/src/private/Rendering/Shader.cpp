@@ -25,7 +25,8 @@ int Shader::CompileShader()
 		glShaderSource(Shader, 1, &RawData, &RawSize);
 		glCompileShader(Shader);
 		ShaderID = Shader;
-		return 0;
+		std::cout << "Compiled shader " << ShaderPath << " with ID " << ShaderID << std::endl;
+		return glGetError();
 	}
 	return -1;
 }

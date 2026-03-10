@@ -72,10 +72,12 @@ void InputTick(GLFWwindow* window)
 
 void RenderTick() 
 {
+	float timeValue = glfwGetTime();
     if(Basic2DShader->GetProgramID() != -1)
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
     glUseProgram(Basic2DShader->GetProgramID());
+	Basic2DShader->SetShaderValue<float>("_time", timeValue);
     glBindVertexArray(VAO);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
