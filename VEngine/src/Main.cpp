@@ -4,6 +4,7 @@
 #include <iostream>
 #include <Window/VgineWindow.h>
 #include <Rendering/Shader.h>
+#include <Rendering/ShaderProgram.h>
 #include "IO/FilesystemExtensions.h"
 #include <filesystem>
 

@@ -143,6 +143,7 @@
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\private\IO\FilesystemExtensions.cpp" />
     <ClCompile Include="src\private\Rendering\Shader.cpp" />
+    <ClCompile Include="src\private\Rendering\ShaderProgram.cpp" />
     <ClCompile Include="src\private\Window\VgineWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
