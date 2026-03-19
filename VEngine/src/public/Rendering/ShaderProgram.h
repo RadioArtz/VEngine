@@ -24,6 +24,7 @@ public:
 	int AttachShader(int inShaderID);
 	int LinkProgram();
 	int GetUniformIndex(const std::string& inUniformName);
+	int GetAttributeIndex(const std::string& inAttributeName);
 
 	template <typename T> int SetShaderValue(const std::string& inUniformName, T inValue)
 	{

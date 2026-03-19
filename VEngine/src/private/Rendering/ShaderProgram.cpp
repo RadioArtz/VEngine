@@ -19,20 +19,16 @@ int ShaderProgram::LinkProgram()
 
 int ShaderProgram::GetUniformIndex(const std::string& inUniformName)
 {
-	return glGetUniformLocation(ProgramID, inUniformName.c_str());
-}
-/*
-template <typename T> int ShaderProgram::SetShaderValue(const std::string& inUniformName, T inValue)
-{
-	int uniformLocation = GetUniformIndex(inUniformName);
+	int uniformLocation = glGetUniformLocation(ProgramID, inUniformName.c_str());
 	if (uniformLocation == -1)
-	{
 		std::cout << "Uniform " << inUniformName << " does not exist in shader program" << std::endl;
-		return -1;
-	}
-
-	//glUniform1f(uniformLocation, inValue);
-	UpdateUniform(uniformLocation, inValue);
-	return glGetError();
+	return uniformLocation;
 }
-*/
+
+int ShaderProgram::GetAttributeIndex(const std::string& inAttributeName)
+{
+	int attributeLocation = glGetAttribLocation(ProgramID, inAttributeName.c_str());
+	if (attributeLocation == -1)
+		std::cout << "Attribute " << inAttributeName << " does not exist in shader program" << std::endl;
+	return attributeLocation;
+}

@@ -142,12 +142,14 @@
     <ClCompile Include="src\glad.c" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\private\IO\FilesystemExtensions.cpp" />
+    <ClCompile Include="src\private\IO\ImageLoader.cpp" />
     <ClCompile Include="src\private\Rendering\Shader.cpp" />
     <ClCompile Include="src\private\Rendering\ShaderProgram.cpp" />
     <ClCompile Include="src\private\Window\VgineWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\public\IO\FilesystemExtensions.h" />
+    <ClInclude Include="src\public\IO\ImageLoader.h" />
     <ClInclude Include="src\public\Rendering\Shader.h" />
     <ClInclude Include="src\public\Rendering\ShaderProgram.h" />
     <ClInclude Include="src\public\Window\VgineWindow.h" />
@@ -166,6 +168,11 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)/game/content/shaders</DestinationFolders>
       <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)/game/content/shaders</DestinationFolders>
+    </CopyFileToFolders>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="content\textures\test.jpg">
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)/game/content/textures</DestinationFolders>
     </CopyFileToFolders>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

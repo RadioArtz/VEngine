@@ -33,6 +33,9 @@
     <ClCompile Include="src\private\Rendering\ShaderProgram.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\private\IO\ImageLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\public\Window\VgineWindow.h">
@@ -47,9 +50,15 @@
     <ClInclude Include="src\public\Rendering\ShaderProgram.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\public\IO\ImageLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="content\shaders\unlitDefault.frag" />
     <CopyFileToFolders Include="content\shaders\unlitDefault.vert" />
+    <CopyFileToFolders Include="content\textures\test.jpg">
+      <Filter>Resource Files</Filter>
+    </CopyFileToFolders>
   </ItemGroup>
 </Project>
