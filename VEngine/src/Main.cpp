@@ -156,7 +156,7 @@ void RenderTick()
     view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
 
     glm::mat4 projection;
-    projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+    projection = glm::perspective(glm::radians(45.0f), EngineWindow->GetWindowSize().x / EngineWindow->GetWindowSize().y, 0.1f, 100.0f);
 
 	int modelLoc = Basic2DShader->GetUniformIndex("_model");
     int viewLoc = Basic2DShader->GetUniformIndex("_view");
