@@ -152,6 +152,7 @@
     <ClInclude Include="src\public\IO\ImageLoader.h" />
     <ClInclude Include="src\public\Rendering\Shader.h" />
     <ClInclude Include="src\public\Rendering\ShaderProgram.h" />
+    <ClInclude Include="src\public\Transform.hpp" />
     <ClInclude Include="src\public\Window\VgineWindow.h" />
   </ItemGroup>
   <ItemGroup>
