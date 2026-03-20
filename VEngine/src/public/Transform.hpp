@@ -33,7 +33,7 @@ public:
 	const glm::vec3& GetRotation() { return rotation; };
 	const glm::vec3& GetScale() { return scale; };
 
-	const glm::mat4& GetModelMatrix() 
+	const glm::mat4& GetTransformMatrix() 
 	{
 		if (isDirty)
 		{
@@ -41,7 +41,7 @@ public:
 			model = glm::translate(model, location);
 			model = glm::rotate(model, glm::radians(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
 			model = glm::rotate(model, glm::radians(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
-			model = glm::rotate(model, glm::radians(rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+			model = glm::rotate(model, glm::radians(rotation.z), glm::vec3(0.0f, 0.0f, -1.0f));
 			model = glm::scale(model, scale);
 			isDirty = false;
 		}

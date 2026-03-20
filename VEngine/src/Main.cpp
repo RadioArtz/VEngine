@@ -149,11 +149,11 @@ void RenderTick()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glUseProgram(Basic2DShader->GetProgramID());
 
+	Transform cameraTransform = Transform();
 	Transform cubeTransform = Transform();
 	cubeTransform.SetRotation(-timeValue * 20.0f, timeValue * 50.0f, sin(timeValue)*10.0f);
 
-    glm::mat4 view = glm::mat4(1.0f);
-    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+	cameraTransform.SetLocation(Transform::VectorForward() * -3.0f);
 
     glm::mat4 projection;
     projection = glm::perspective(glm::radians(45.0f), EngineWindow->GetWindowSize().x / EngineWindow->GetWindowSize().y, 0.1f, 100.0f);
@@ -162,8 +162,8 @@ void RenderTick()
     int viewLoc = Basic2DShader->GetUniformIndex("_view");
     int projectionLoc = Basic2DShader->GetUniformIndex("_projection");
 
-    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(cubeTransform.GetModelMatrix()));
-    glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(cubeTransform.GetTransformMatrix()));
+    glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(cameraTransform.GetTransformMatrix()));
 	glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
 	Basic2DShader->SetShaderValue<float>("_time", timeValue);
