@@ -5,13 +5,14 @@
 #include <Window/VgineWindow.h>
 #include <Rendering/Shader.h>
 #include <Rendering/ShaderProgram.h>
-#include "IO/FilesystemExtensions.h"
+#include <IO/FilesystemExtensions.h>
 #include <filesystem>
 #include <IO/ImageLoader.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <Transform.hpp>
+#include <Camera.hpp>
 
 
 void InputTick(GLFWwindow* window);
@@ -19,6 +20,7 @@ void ExitToDesktop();
 void RenderTick();
 void PrepareShader();
 void SetupTexturesTemp();
+void HandleCameraInput(Transform* camTrans);
 int EngineInit();
 VgineWindow* EngineWindow;
 
@@ -134,45 +136,64 @@ void SetupTexturesTemp()
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
     glGenerateMipmap(GL_TEXTURE_2D);
 }
-
+    
 void InputTick(GLFWwindow* window) 
 {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         ExitToDesktop();
 }
 
+Transform cameraTransform = Transform();
+Transform cubeTransform = Transform();
+Camera awesomeCamera = Camera(&cameraTransform);
+
 void RenderTick() 
 {
 	float timeValue = glfwGetTime();
-    if(Basic2DShader->GetProgramID() != -1)
+    if (Basic2DShader->GetProgramID() == -1)
+        return;
+
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glUseProgram(Basic2DShader->GetProgramID());
 
-	Transform cameraTransform = Transform();
-	Transform cubeTransform = Transform();
-	cubeTransform.SetRotation(-timeValue * 20.0f, timeValue * 50.0f, sin(timeValue)*10.0f);
-
-	cameraTransform.SetLocation(Transform::VectorForward() * -3.0f);
-
-    glm::mat4 projection;
-    projection = glm::perspective(glm::radians(45.0f), EngineWindow->GetWindowSize().x / EngineWindow->GetWindowSize().y, 0.1f, 100.0f);
+    HandleCameraInput(&cameraTransform);
 
 	int modelLoc = Basic2DShader->GetUniformIndex("_model");
     int viewLoc = Basic2DShader->GetUniformIndex("_view");
     int projectionLoc = Basic2DShader->GetUniformIndex("_projection");
-
+    
     glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(cubeTransform.GetTransformMatrix()));
-    glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(cameraTransform.GetTransformMatrix()));
-	glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
+    glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(awesomeCamera.GetViewMatrix()));
+	glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(awesomeCamera.GetProjectionMatrix()));
 
 	Basic2DShader->SetShaderValue<float>("_time", timeValue);
     glBindVertexArray(VAO);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-	glDrawArrays(GL_TRIANGLES, 0, 36);
     glBindTexture(GL_TEXTURE_2D, myTexture);
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+	cubeTransform.SetLocation(glm::vec3(2.0f, 0.0f, 0.0f));
+    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(cubeTransform.GetTransformMatrix()));
+	glDrawArrays(GL_TRIANGLES, 0, 36);
     glBindVertexArray(0);
+}
+
+void HandleCameraInput(Transform* camTrans) 
+{
+    const float cameraSpeed = 0.05f;
+    if (glfwGetKey(EngineWindow->GetInternalGLFWwindow(), GLFW_KEY_W) == GLFW_PRESS)
+        camTrans->AddLocation(cameraSpeed * camTrans->GetForwardVector());
+    if (glfwGetKey(EngineWindow->GetInternalGLFWwindow(), GLFW_KEY_S) == GLFW_PRESS)
+        camTrans->AddLocation(cameraSpeed * -camTrans->GetForwardVector());
+    if (glfwGetKey(EngineWindow->GetInternalGLFWwindow(), GLFW_KEY_A) == GLFW_PRESS)
+        camTrans->AddLocation(Transform::NormalizeVector(camTrans->GetRightVector()) * cameraSpeed);
+    if (glfwGetKey(EngineWindow->GetInternalGLFWwindow(), GLFW_KEY_D) == GLFW_PRESS)
+        camTrans->AddLocation(Transform::NormalizeVector(-camTrans->GetRightVector()) * cameraSpeed);
+    if (glfwGetKey(EngineWindow->GetInternalGLFWwindow(), GLFW_KEY_E) == GLFW_PRESS)
+        camTrans->AddLocation(cameraSpeed * camTrans->GetUpVector());
+    if (glfwGetKey(EngineWindow->GetInternalGLFWwindow(), GLFW_KEY_Q) == GLFW_PRESS)
+        camTrans->AddLocation(cameraSpeed * -camTrans->GetUpVector());
 }
 
 void ExitToDesktop() 

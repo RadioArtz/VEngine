@@ -148,6 +148,7 @@
     <ClCompile Include="src\private\Window\VgineWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\public\Camera.hpp" />
     <ClInclude Include="src\public\IO\FilesystemExtensions.h" />
     <ClInclude Include="src\public\IO\ImageLoader.h" />
     <ClInclude Include="src\public\Rendering\Shader.h" />

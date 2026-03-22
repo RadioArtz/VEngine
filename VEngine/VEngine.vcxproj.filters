@@ -56,6 +56,9 @@
     <ClInclude Include="src\public\Transform.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\public\Camera.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="content\shaders\unlitDefault.frag" />
