@@ -23,7 +23,8 @@ void SetupTexturesTemp();
 void HandleCameraInput(Transform* camTrans);
 int EngineInit();
 VgineWindow* EngineWindow;
-
+float deltaTime;
+float lastTime;
 #ifdef _DEBUG
     int main() { return EngineInit(); }
 #else
@@ -109,13 +110,17 @@ int EngineInit()
 
 	SetupTexturesTemp();
     glEnable(GL_DEPTH_TEST);
+    lastTime = glfwGetTime();
 
     while (!glfwWindowShouldClose(GLWindow))
     {
+        deltaTime = glfwGetTime() - lastTime;
+        lastTime = glfwGetTime();
         InputTick(GLWindow);
         RenderTick();
         glfwSwapBuffers(GLWindow);
         glfwPollEvents();
+
     }
     glfwTerminate();
     std::cout << "Closed Engine Window!" << std::endl;
@@ -181,7 +186,7 @@ void RenderTick()
 
 void HandleCameraInput(Transform* camTrans) 
 {
-    const float cameraSpeed = 0.05f;
+    float cameraSpeed = 2.5f * deltaTime;
     if (glfwGetKey(EngineWindow->GetInternalGLFWwindow(), GLFW_KEY_W) == GLFW_PRESS)
         camTrans->AddLocation(cameraSpeed * camTrans->GetForwardVector());
     if (glfwGetKey(EngineWindow->GetInternalGLFWwindow(), GLFW_KEY_S) == GLFW_PRESS)
