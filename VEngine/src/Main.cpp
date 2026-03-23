@@ -186,18 +186,22 @@ void RenderTick()
 
 void HandleCameraInput(Transform* camTrans) 
 {
-    float cameraSpeed = 2.5f * deltaTime;
-    if (glfwGetKey(EngineWindow->GetInternalGLFWwindow(), GLFW_KEY_W) == GLFW_PRESS)
+    float cameraSpeed = 1.5f * deltaTime;
+    GLFWwindow* window = EngineWindow->GetInternalGLFWwindow();
+    if(glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+        cameraSpeed = 5.0f * deltaTime;
+    
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         camTrans->AddLocation(cameraSpeed * camTrans->GetForwardVector());
-    if (glfwGetKey(EngineWindow->GetInternalGLFWwindow(), GLFW_KEY_S) == GLFW_PRESS)
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
         camTrans->AddLocation(cameraSpeed * -camTrans->GetForwardVector());
-    if (glfwGetKey(EngineWindow->GetInternalGLFWwindow(), GLFW_KEY_A) == GLFW_PRESS)
-        camTrans->AddLocation(Transform::NormalizeVector(camTrans->GetRightVector()) * cameraSpeed);
-    if (glfwGetKey(EngineWindow->GetInternalGLFWwindow(), GLFW_KEY_D) == GLFW_PRESS)
-        camTrans->AddLocation(Transform::NormalizeVector(-camTrans->GetRightVector()) * cameraSpeed);
-    if (glfwGetKey(EngineWindow->GetInternalGLFWwindow(), GLFW_KEY_E) == GLFW_PRESS)
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+        camTrans->AddLocation(cameraSpeed * camTrans->GetRightVector());
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+        camTrans->AddLocation(cameraSpeed * -camTrans->GetRightVector());
+    if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
         camTrans->AddLocation(cameraSpeed * camTrans->GetUpVector());
-    if (glfwGetKey(EngineWindow->GetInternalGLFWwindow(), GLFW_KEY_Q) == GLFW_PRESS)
+    if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
         camTrans->AddLocation(cameraSpeed * -camTrans->GetUpVector());
 }
 
