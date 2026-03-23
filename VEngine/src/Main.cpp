@@ -20,6 +20,7 @@ void ExitToDesktop();
 void RenderTick();
 void PrepareShader();
 void SetupTexturesTemp();
+void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void HandleCameraInput(Transform* camTrans);
 int EngineInit();
 VgineWindow* EngineWindow;
@@ -97,6 +98,11 @@ unsigned int EBO;
 ShaderProgram* Basic2DShader;
 unsigned int myTexture;
 
+double mouseLastX;
+double mouseLastY;
+float mouseOffsetX;
+float mouseOffsetY;
+
 int EngineInit() 
 {
     std::string exeLocation = FilesystemExtensions::GetExeLocation();
@@ -111,7 +117,10 @@ int EngineInit()
 	SetupTexturesTemp();
     glEnable(GL_DEPTH_TEST);
     lastTime = glfwGetTime();
-
+    mouseLastX = EngineWindow->GetWindowSize().x / 2.0f;
+    mouseLastY = EngineWindow->GetWindowSize().y / 2.0f;
+    glfwSetInputMode(GLWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetCursorPosCallback(GLWindow, mouse_callback);
     while (!glfwWindowShouldClose(GLWindow))
     {
         deltaTime = glfwGetTime() - lastTime;
@@ -120,7 +129,6 @@ int EngineInit()
         RenderTick();
         glfwSwapBuffers(GLWindow);
         glfwPollEvents();
-
     }
     glfwTerminate();
     std::cout << "Closed Engine Window!" << std::endl;
@@ -128,10 +136,10 @@ int EngineInit()
 }
 
 // cba to make a texture class rn but i wanna keep EngineInit() a bit clean so yeah
+    unsigned char* data;
 void SetupTexturesTemp() 
 {
     int width, height, nrChannels;
-    unsigned char* data;
     std::string imagePath = "game/content/textures/test.jpg";
     ImageLoader::LoadImage(imagePath, &data, &width, &height, &nrChannels);
 
@@ -140,6 +148,7 @@ void SetupTexturesTemp()
     glBindTexture(GL_TEXTURE_2D, myTexture);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
     glGenerateMipmap(GL_TEXTURE_2D);
+    //ImageLoader::FreeImage(data);
 }
     
 void InputTick(GLFWwindow* window) 
@@ -172,7 +181,7 @@ void RenderTick()
     glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(awesomeCamera.GetViewMatrix()));
 	glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(awesomeCamera.GetProjectionMatrix()));
 
-	Basic2DShader->SetShaderValue<float>("_time", timeValue);
+	//Basic2DShader->SetShaderValue<float>("_time", timeValue);
     glBindVertexArray(VAO);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
@@ -184,6 +193,16 @@ void RenderTick()
     glBindVertexArray(0);
 }
 
+void mouse_callback(GLFWwindow* window, double xpos, double ypos) 
+{
+    mouseOffsetX = xpos - mouseLastX;
+    mouseOffsetX *= 0.1f;
+    mouseOffsetY = ypos - mouseLastY;   
+    mouseOffsetY *= 0.1f;
+    mouseLastX = xpos;
+    mouseLastY = ypos;
+    std::cout << mouseOffsetX << " : " << mouseOffsetY << std::endl;
+};
 void HandleCameraInput(Transform* camTrans) 
 {
     float cameraSpeed = 1.5f * deltaTime;
@@ -203,6 +222,11 @@ void HandleCameraInput(Transform* camTrans)
         camTrans->AddLocation(cameraSpeed * camTrans->GetUpVector());
     if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
         camTrans->AddLocation(cameraSpeed * -camTrans->GetUpVector());
+        
+
+    camTrans->AddRotation(-mouseOffsetY, mouseOffsetX, 0);
+    mouseOffsetX = 0;
+    mouseOffsetY = 0;
 }
 
 void ExitToDesktop() 
