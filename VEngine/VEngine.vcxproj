@@ -146,6 +146,7 @@
     <ClCompile Include="src\private\Rendering\Shader.cpp" />
     <ClCompile Include="src\private\Rendering\ShaderProgram.cpp" />
     <ClCompile Include="src\private\Window\VgineWindow.cpp" />
+    <ClCompile Include="src\private\Rendering\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\public\Camera.hpp" />
@@ -155,6 +156,7 @@
     <ClInclude Include="src\public\Rendering\ShaderProgram.h" />
     <ClInclude Include="src\public\Transform.hpp" />
     <ClInclude Include="src\public\Window\VgineWindow.h" />
+    <ClInclude Include="src\public\Rendering\Texture.h" />
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="content\shaders\unlitDefault.vert">

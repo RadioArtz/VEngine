@@ -13,6 +13,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <Transform.hpp>
 #include <Camera.hpp>
+#include <Rendering/Texture.h>
 
 
 void InputTick(GLFWwindow* window);
@@ -103,6 +104,8 @@ double mouseLastY;
 float mouseOffsetX;
 float mouseOffsetY;
 
+Texture testTex = Texture();
+Texture testTex2 = Texture();
 int EngineInit() 
 {
     std::string exeLocation = FilesystemExtensions::GetExeLocation();
@@ -115,6 +118,8 @@ int EngineInit()
     PrepareShader();
 
 	SetupTexturesTemp();
+    testTex.SetupGLTexture(true);
+    testTex2.SetupGLTexture(false);
     glEnable(GL_DEPTH_TEST);
     lastTime = glfwGetTime();
     mouseLastX = EngineWindow->GetWindowSize().x / 2.0f;
@@ -136,9 +141,10 @@ int EngineInit()
 }
 
 // cba to make a texture class rn but i wanna keep EngineInit() a bit clean so yeah
-    unsigned char* data;
+    //unsigned char* data;
 void SetupTexturesTemp() 
 {
+    /*
     int width, height, nrChannels;
     std::string imagePath = "game/content/textures/test.jpg";
     ImageLoader::LoadImage(imagePath, &data, &width, &height, &nrChannels);
@@ -149,6 +155,7 @@ void SetupTexturesTemp()
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
     glGenerateMipmap(GL_TEXTURE_2D);
     //ImageLoader::FreeImage(data);
+    */
 }
     
 void InputTick(GLFWwindow* window) 
@@ -160,6 +167,7 @@ void InputTick(GLFWwindow* window)
 Transform cameraTransform = Transform();
 Transform cubeTransform = Transform();
 Camera awesomeCamera = Camera(&cameraTransform);
+
 
 void RenderTick() 
 {
@@ -176,7 +184,7 @@ void RenderTick()
 	int modelLoc = Basic2DShader->GetUniformIndex("_model");
     int viewLoc = Basic2DShader->GetUniformIndex("_view");
     int projectionLoc = Basic2DShader->GetUniformIndex("_projection");
-    
+    cubeTransform.SetLocation(glm::vec3(0.0f, 0.0f, 0.0f));
     glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(cubeTransform.GetTransformMatrix()));
     glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(awesomeCamera.GetViewMatrix()));
 	glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(awesomeCamera.GetProjectionMatrix()));
@@ -185,10 +193,13 @@ void RenderTick()
     glBindVertexArray(VAO);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-    glBindTexture(GL_TEXTURE_2D, myTexture);
+    //glBindTexture(GL_TEXTURE_2D, myTexture);
+    testTex.ActivateTexture();
+
     glDrawArrays(GL_TRIANGLES, 0, 36);
-	cubeTransform.SetLocation(glm::vec3(2.0f, 0.0f, 0.0f));
+	cubeTransform.SetLocation(glm::vec3(0.0f, 0.0f, 1.0f));
     glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(cubeTransform.GetTransformMatrix()));
+    testTex2.ActivateTexture();
 	glDrawArrays(GL_TRIANGLES, 0, 36);
     glBindVertexArray(0);
 }
