@@ -22,12 +22,6 @@ struct UniformMetadata
 	UniformVal uniformValue;
 };
 
-struct TextureBinding 
-{
-	std::string uniformName = "uninitialized";
-	Texture* texturePtr = nullptr;
-};
-
 class Material
 {
 public:
@@ -47,7 +41,6 @@ private:
 	ShaderProgram activeShader;
 	unsigned int numUniforms = 0;
 	std::unordered_map<std::string, UniformMetadata> uniformCache;
-	std::unordered_map<std::string, TextureBinding> textureBindings;
 
 	int QueryParams();
 public:
