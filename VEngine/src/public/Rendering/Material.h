@@ -3,6 +3,9 @@
 #include <Rendering/ShaderProgram.h>
 #include <vector>
 #include <Rendering/Texture.h>
+#include <variant>
+
+using UniformVal = std::variant<std::monostate, int, float, glm::vec2, glm::vec3, glm::vec4, glm::mat4, Texture*>;
 
 struct UniformMetadata 
 {
@@ -16,6 +19,7 @@ struct UniformMetadata
 	int uniformSize = -1;
 	GLenum uniformType = -1;
 	int uniformLocation = -1;
+	UniformVal uniformValue;
 };
 
 struct TextureBinding 
@@ -53,7 +57,14 @@ public:
 
 	int InitializeMaterial(ShaderDef* inShaderDef = nullptr);
 
-	int SetTextureParam(const std::string& inParamName, Texture* inTexture);
+	template <typename T> int SetMaterialParam(const std::string& inParamName, T inValue)
+	{
+			return SetValueParamCached(inParamName, (UniformVal)inValue);
+	};
 
 	void RenderMaterial();
+
+private:
+
+	int SetValueParamCached(const std::string& inParamName, UniformVal inValue);
 };

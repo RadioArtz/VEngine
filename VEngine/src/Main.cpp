@@ -126,6 +126,7 @@ int EngineInit()
 
     testmaterial = new Material(basicMaterialDef, false);
     testmaterial2 = new Material(basicMaterialDef, false);
+
     PrepareShader(testmaterial, false);
     PrepareShader(testmaterial2, true);
 
@@ -166,37 +167,26 @@ Camera awesomeCamera = Camera(&cameraTransform);
 void RenderTick() 
 {
 	float timeValue = glfwGetTime();
-    if (Basic2DShader->GetProgramID() == -1)
-        return;
 
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    testmaterial->RenderMaterial();
 
     HandleCameraInput(&cameraTransform);
+    testmaterial2->SetMaterialParam("_time", timeValue);
 
     cubeTransform.SetLocation(glm::vec3(0.0f, 0.0f, 0.0f));
 
-	int modelLoc = testmaterial->GetActiveShader()->GetUniformIndex("_model");
-    int viewLoc = testmaterial->GetActiveShader()->GetUniformIndex("_view");
-    int projectionLoc = testmaterial->GetActiveShader()->GetUniformIndex("_projection");
-
-    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(cubeTransform.GetTransformMatrix()));
-    glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(awesomeCamera.GetViewMatrix()));
-	glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(awesomeCamera.GetProjectionMatrix()));
+    testmaterial->SetMaterialParam("_model", cubeTransform.GetTransformMatrix());
+    testmaterial->SetMaterialParam("_view", awesomeCamera.GetViewMatrix());
+    testmaterial->SetMaterialParam("_projection", awesomeCamera.GetProjectionMatrix());
 
 	cubeTransform.SetLocation(glm::vec3(0.0f, 0.0f, 1.0f));
-    testmaterial2->RenderMaterial();
 
-    modelLoc = testmaterial2->GetActiveShader()->GetUniformIndex("_model");
-    viewLoc = testmaterial2->GetActiveShader()->GetUniformIndex("_view");
-    projectionLoc = testmaterial2->GetActiveShader()->GetUniformIndex("_projection");
+    testmaterial2->SetMaterialParam("_model", cubeTransform.GetTransformMatrix());
+    testmaterial2->SetMaterialParam("_view", awesomeCamera.GetViewMatrix());
+    testmaterial2->SetMaterialParam("_projection", awesomeCamera.GetProjectionMatrix());
 
-    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(cubeTransform.GetTransformMatrix()));
-    glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(awesomeCamera.GetViewMatrix()));
-    glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(awesomeCamera.GetProjectionMatrix()));
 
-	//Basic2DShader->SetShaderValue<float>("_time", timeValue);
     testmaterial->RenderMaterial();
     glBindVertexArray(VAO);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
@@ -251,7 +241,7 @@ void ExitToDesktop()
     glfwSetWindowShouldClose(EngineWindow->GetInternalGLFWwindow(), true);
 }
 
-void PrepareShader(Material* inMaterial, bool randomBogus) 
+void PrepareShader(Material* inMaterial, bool randomBogus)
 {
     inMaterial->InitializeMaterial();
 
@@ -278,13 +268,13 @@ void PrepareShader(Material* inMaterial, bool randomBogus)
     //glVertexAttribPointer(aColorLocation, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
     //glEnableVertexAttribArray(aColorLocation);
 
-	int aUVLocation = Basic2DShader->GetAttributeIndex("aTexCoord");
+    int aUVLocation = Basic2DShader->GetAttributeIndex("aTexCoord");
     glVertexAttribPointer(aUVLocation, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(aUVLocation);
 
-    inMaterial->SetTextureParam("_OverlayTex", &testTex3);
-    if(randomBogus)
-        inMaterial->SetTextureParam("_MainTex", &testTex);
+    inMaterial->SetMaterialParam("_OverlayTex", &testTex3);
+    if (randomBogus)
+        inMaterial->SetMaterialParam("_MainTex", &testTex);
     else
-        inMaterial->SetTextureParam("_MainTex", &testTex2);
+        inMaterial->SetMaterialParam("_MainTex", &testTex2);
 }

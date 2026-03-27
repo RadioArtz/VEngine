@@ -4,7 +4,7 @@ int Material::QueryParams()
 {
     if (!activeShader.IsReady())
     {
-        std::cout << "Material not ready for querying!" << std::endl;
+        std::cout << "WARN | Material not ready for querying!" << std::endl;
         return -1;
     }
 
@@ -54,58 +54,54 @@ int Material::InitializeMaterial(ShaderDef* inShaderDef)
     return 0;
 };
 
-int Material::SetTextureParam(const std::string& inParamName, Texture* inTexture)
+int Material::SetValueParamCached(const std::string& inParamName, UniformVal inValue)
 {
     auto uniformSearch = uniformCache.find(inParamName);
     if (uniformSearch == uniformCache.end())
     {
-        std::cout << "Texture Parameter '" << inParamName << "' not found in ShaderProgram ProgramID:" << activeShader.GetProgramID();
+        std::cout << "Parameter '" << inParamName << "' not found in ShaderProgram with ID:" << activeShader.GetProgramID() << std::endl;
         return -1;
-    }
-    if (uniformSearch->second.uniformType != GL_SAMPLER_2D)
-    {
-        std::cout << "Uniform '" << inParamName << "' is not of type GL_SAMPLER_2D ProgramID:" << activeShader.GetProgramID();
-        return -1;
-    }
-
-    auto texBindSearch = textureBindings.find(inParamName);
-    if (texBindSearch == textureBindings.end())
-    {
-        textureBindings[inParamName] = TextureBinding(inParamName, inTexture);
-        std::cout << "bound new param '" << inParamName << "' to new slot " << std::endl;
-        return 0;
     }
     else
     {
-        if (texBindSearch->second.texturePtr == inTexture)
-        {
-            std::cout << "Exact Texture already bound to slot '" << inParamName << "'! Skipping.. " << std::endl;
-            return 1;
-        }
-        textureBindings[inParamName] = TextureBinding(inParamName, inTexture);
-        std::cout << "rebound param '" << inParamName << "' with new texture" << std::endl;
+        uniformSearch->second.uniformValue = inValue;
+        //std::cout << "Set material parameter '" << inParamName << "' to slot" << std::endl;
+        return 0;
     }
+    return 0;
 };
 
 void Material::RenderMaterial() 
 {
     glUseProgram(activeShader.GetProgramID());
     int textureUnit = 0;
-    int numTexBindings = textureBindings.size();
+    int numUniforms = uniformCache.size();
+    int numUnboundTextures = 0;
 
-    if(numTexBindings == 0)
+    for (auto& [name, uniformData] : uniformCache) 
     {
-        //no textures used. maybe warn IF there are supposed to be textures!
-    }
-    else 
-    {
-        for (auto& [name, binding] : textureBindings)
+        if (std::holds_alternative<std::monostate>(uniformData.uniformValue))
         {
-            binding.texturePtr->ActivateTexture(textureUnit);
-            int location = uniformCache[name].uniformLocation;
-            glUniform1i(location, textureUnit);
-            textureUnit++;
+            //Uniform supposed to hold a value but never assigned one!
+            std::cout << "WARN | Uniform " << uniformData.uniformName << " does not have a value assigned!" << std::endl;
+            continue;
+        }
+
+        int location = uniformCache[name].uniformLocation;
+        switch (uniformData.uniformType)
+        {
+            case GL_INT: activeShader.SetShaderValue(location, std::get<int>(uniformData.uniformValue)); break;
+            case GL_FLOAT: activeShader.SetShaderValue(location, std::get<float>(uniformData.uniformValue)); break;
+            case GL_FLOAT_VEC2: activeShader.SetShaderValue(location, std::get<glm::vec2>(uniformData.uniformValue)); break;
+            case GL_FLOAT_VEC3: activeShader.SetShaderValue(location, std::get<glm::vec3>(uniformData.uniformValue)); break;
+            case GL_FLOAT_VEC4: activeShader.SetShaderValue(location, std::get<glm::vec4>(uniformData.uniformValue)); break;
+            case GL_FLOAT_MAT4: activeShader.SetShaderValue(location, std::get<glm::mat4>(uniformData.uniformValue)); break;
+            case GL_SAMPLER_2D:
+            {
+                (std::get<Texture*>(uniformData.uniformValue))->ActivateTexture(textureUnit);
+                activeShader.SetShaderValue(location, textureUnit);
+                textureUnit++;
+            }
         }
     }
-    
 }

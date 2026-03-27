@@ -2,6 +2,7 @@
 #include <string>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <iostream>
 
 class ShaderProgram
@@ -17,6 +18,7 @@ private:
 	void UpdateUniform(int inUniformLocation, glm::vec2 inValue) { glUniform2f(inUniformLocation, inValue.x, inValue.y); };
 	void UpdateUniform(int inUniformLocation, glm::vec3 inValue) { glUniform3f(inUniformLocation, inValue.x, inValue.y, inValue.z); };
 	void UpdateUniform(int inUniformLocation, glm::vec4 inValue) { glUniform4f(inUniformLocation, inValue.x, inValue.y, inValue.z, inValue.w); };
+	void UpdateUniform(int inUniformLocation, glm::mat4 inValue) { glUniformMatrix4fv(inUniformLocation, 1, GL_FALSE, glm::value_ptr(inValue)); };
 
 
 public:
