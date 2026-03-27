@@ -9,7 +9,12 @@ private:
 	
 	unsigned int glTexture;
 public:
-	int SetupGLTexture(bool guh);
-	void ActivateTexture();
+	int SetupGLTexture(int guh);
+	void ActivateTexture(int TextureUnit);
+	int GetGLTexture() { return glTexture; };
 };
 
+enum class EMipMode 
+{
+
+};

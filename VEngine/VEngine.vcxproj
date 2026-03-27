@@ -143,6 +143,7 @@
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\private\IO\FilesystemExtensions.cpp" />
     <ClCompile Include="src\private\IO\ImageLoader.cpp" />
+    <ClCompile Include="src\private\Rendering\Material.cpp" />
     <ClCompile Include="src\private\Rendering\Shader.cpp" />
     <ClCompile Include="src\private\Rendering\ShaderProgram.cpp" />
     <ClCompile Include="src\private\Window\VgineWindow.cpp" />
@@ -152,6 +153,7 @@
     <ClInclude Include="src\public\Camera.hpp" />
     <ClInclude Include="src\public\IO\FilesystemExtensions.h" />
     <ClInclude Include="src\public\IO\ImageLoader.h" />
+    <ClInclude Include="src\public\Rendering\Material.h" />
     <ClInclude Include="src\public\Rendering\Shader.h" />
     <ClInclude Include="src\public\Rendering\ShaderProgram.h" />
     <ClInclude Include="src\public\Transform.hpp" />

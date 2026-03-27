@@ -14,13 +14,13 @@
 #include <Transform.hpp>
 #include <Camera.hpp>
 #include <Rendering/Texture.h>
+#include <Rendering/Material.h>
 
 
 void InputTick(GLFWwindow* window);
 void ExitToDesktop();
 void RenderTick();
-void PrepareShader();
-void SetupTexturesTemp();
+void PrepareShader(Material* inMaterial, bool randomBogus);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void HandleCameraInput(Transform* camTrans);
 int EngineInit();
@@ -106,6 +106,14 @@ float mouseOffsetY;
 
 Texture testTex = Texture();
 Texture testTex2 = Texture();
+Texture testTex3 = Texture();
+
+ShaderDef basicMaterialDef = ShaderDef(
+    "BasicFlatLayeredMaterial",
+    "game/content/shaders/unlitDefault.vert",
+    "game/content/shaders/unlitDefault.frag");
+Material* testmaterial;
+Material* testmaterial2;
 int EngineInit() 
 {
     std::string exeLocation = FilesystemExtensions::GetExeLocation();
@@ -115,11 +123,16 @@ int EngineInit()
     glfwInit();
     EngineWindow = new VgineWindow();
     GLFWwindow* GLWindow = EngineWindow->GetInternalGLFWwindow();
-    PrepareShader();
 
-	SetupTexturesTemp();
-    testTex.SetupGLTexture(true);
-    testTex2.SetupGLTexture(false);
+    testmaterial = new Material(basicMaterialDef, false);
+    testmaterial2 = new Material(basicMaterialDef, false);
+    PrepareShader(testmaterial, false);
+    PrepareShader(testmaterial2, true);
+
+    testTex.SetupGLTexture(0);
+    testTex2.SetupGLTexture(1);
+    testTex3.SetupGLTexture(2);
+
     glEnable(GL_DEPTH_TEST);
     lastTime = glfwGetTime();
     mouseLastX = EngineWindow->GetWindowSize().x / 2.0f;
@@ -139,24 +152,6 @@ int EngineInit()
     std::cout << "Closed Engine Window!" << std::endl;
     return 0;
 }
-
-// cba to make a texture class rn but i wanna keep EngineInit() a bit clean so yeah
-    //unsigned char* data;
-void SetupTexturesTemp() 
-{
-    /*
-    int width, height, nrChannels;
-    std::string imagePath = "game/content/textures/test.jpg";
-    ImageLoader::LoadImage(imagePath, &data, &width, &height, &nrChannels);
-
-    glGenTextures(1, &myTexture);
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, myTexture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-    glGenerateMipmap(GL_TEXTURE_2D);
-    //ImageLoader::FreeImage(data);
-    */
-}
     
 void InputTick(GLFWwindow* window) 
 {
@@ -168,7 +163,6 @@ Transform cameraTransform = Transform();
 Transform cubeTransform = Transform();
 Camera awesomeCamera = Camera(&cameraTransform);
 
-
 void RenderTick() 
 {
 	float timeValue = glfwGetTime();
@@ -177,29 +171,39 @@ void RenderTick()
 
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glUseProgram(Basic2DShader->GetProgramID());
+    testmaterial->RenderMaterial();
 
     HandleCameraInput(&cameraTransform);
 
-	int modelLoc = Basic2DShader->GetUniformIndex("_model");
-    int viewLoc = Basic2DShader->GetUniformIndex("_view");
-    int projectionLoc = Basic2DShader->GetUniformIndex("_projection");
     cubeTransform.SetLocation(glm::vec3(0.0f, 0.0f, 0.0f));
+
+	int modelLoc = testmaterial->GetActiveShader()->GetUniformIndex("_model");
+    int viewLoc = testmaterial->GetActiveShader()->GetUniformIndex("_view");
+    int projectionLoc = testmaterial->GetActiveShader()->GetUniformIndex("_projection");
+
     glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(cubeTransform.GetTransformMatrix()));
     glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(awesomeCamera.GetViewMatrix()));
 	glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(awesomeCamera.GetProjectionMatrix()));
 
+	cubeTransform.SetLocation(glm::vec3(0.0f, 0.0f, 1.0f));
+    testmaterial2->RenderMaterial();
+
+    modelLoc = testmaterial2->GetActiveShader()->GetUniformIndex("_model");
+    viewLoc = testmaterial2->GetActiveShader()->GetUniformIndex("_view");
+    projectionLoc = testmaterial2->GetActiveShader()->GetUniformIndex("_projection");
+
+    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(cubeTransform.GetTransformMatrix()));
+    glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(awesomeCamera.GetViewMatrix()));
+    glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(awesomeCamera.GetProjectionMatrix()));
+
 	//Basic2DShader->SetShaderValue<float>("_time", timeValue);
+    testmaterial->RenderMaterial();
     glBindVertexArray(VAO);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-    //glBindTexture(GL_TEXTURE_2D, myTexture);
-    testTex.ActivateTexture();
 
     glDrawArrays(GL_TRIANGLES, 0, 36);
-	cubeTransform.SetLocation(glm::vec3(0.0f, 0.0f, 1.0f));
-    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(cubeTransform.GetTransformMatrix()));
-    testTex2.ActivateTexture();
+
+    testmaterial2->RenderMaterial();
 	glDrawArrays(GL_TRIANGLES, 0, 36);
     glBindVertexArray(0);
 }
@@ -212,8 +216,9 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
     mouseOffsetY *= 0.1f;
     mouseLastX = xpos;
     mouseLastY = ypos;
-    std::cout << mouseOffsetX << " : " << mouseOffsetY << std::endl;
+    //std::cout << mouseOffsetX << " : " << mouseOffsetY << std::endl;
 };
+
 void HandleCameraInput(Transform* camTrans) 
 {
     float cameraSpeed = 1.5f * deltaTime;
@@ -246,25 +251,17 @@ void ExitToDesktop()
     glfwSetWindowShouldClose(EngineWindow->GetInternalGLFWwindow(), true);
 }
 
-void PrepareShader() 
+void PrepareShader(Material* inMaterial, bool randomBogus) 
 {
-    Shader VertexShader = Shader();
-    VertexShader.SetShaderSource("game/content/shaders/unlitDefault.vert", EShaderType::Vertex);
-    VertexShader.CompileShader();
+    inMaterial->InitializeMaterial();
 
-    Shader FragmentShader = Shader();
-    FragmentShader.SetShaderSource("game/content/shaders/unlitDefault.frag", EShaderType::Fragment);
-    FragmentShader.CompileShader();
+    Basic2DShader = inMaterial->GetActiveShader();
 
-    Basic2DShader = new ShaderProgram();
-    Basic2DShader->AttachShader(VertexShader.GetShaderID());
-    Basic2DShader->AttachShader(FragmentShader.GetShaderID());
-    Basic2DShader->LinkProgram();
+    glUseProgram(Basic2DShader->GetProgramID());
 
     glGenBuffers(1, &VBO);
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &EBO);
-
     glBindVertexArray(VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
@@ -283,5 +280,11 @@ void PrepareShader()
 
 	int aUVLocation = Basic2DShader->GetAttributeIndex("aTexCoord");
     glVertexAttribPointer(aUVLocation, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(2);
+    glEnableVertexAttribArray(aUVLocation);
+
+    inMaterial->SetTextureParam("_OverlayTex", &testTex3);
+    if(randomBogus)
+        inMaterial->SetTextureParam("_MainTex", &testTex);
+    else
+        inMaterial->SetTextureParam("_MainTex", &testTex2);
 }

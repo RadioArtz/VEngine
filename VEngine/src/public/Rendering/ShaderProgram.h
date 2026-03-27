@@ -26,6 +26,8 @@ public:
 	int GetUniformIndex(const std::string& inUniformName);
 	int GetAttributeIndex(const std::string& inAttributeName);
 
+	bool IsReady() { return (ProgramID != -1); };
+
 	template <typename T> int SetShaderValue(const std::string& inUniformName, T inValue)
 	{
 		int uniformLocation = GetUniformIndex(inUniformName);
@@ -35,6 +37,12 @@ public:
 			return -1;
 		}
 
+		UpdateUniform(uniformLocation, inValue);
+		return glGetError();
+	};
+
+	template <typename T> int SetShaderValue(int uniformLocation, T inValue)
+	{
 		UpdateUniform(uniformLocation, inValue);
 		return glGetError();
 	};
