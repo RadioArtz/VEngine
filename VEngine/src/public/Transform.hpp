@@ -96,7 +96,7 @@ public:
 	static glm::vec3 LookAtVector(const glm::vec3& Origin, const glm::vec3& Target) { return NormalizeVector(Target - Origin); };
 	static float GetDistance(const glm::vec3& A, const glm::vec3& B) { return glm::distance(A, B); };
 
-	static const glm::vec3 VectorUp() { return glm::vec3(0.0f, 1.0f, 0.0f); };
+	static const glm::vec3 VectorUp() { return glm::vec3(0.0f, 1.0f, 0.0f); };	// FIXME: You can make these compile-time ready by marking them static constexpr (returning const values rarely make sense and it also doesn't make sense here)
 	static const glm::vec3 VectorRight() { return glm::vec3(1.0f, 0.0f, 0.0f); };
 	static const glm::vec3 VectorForward() { return glm::vec3(0.0f, 0.0f, 1.0f); };
 };

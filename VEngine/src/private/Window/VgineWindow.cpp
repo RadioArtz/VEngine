@@ -16,13 +16,14 @@ GLFWwindow* VgineWindow::NewWindow(const char* InWindowTitle, const WindowType I
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     InternalWindow = glfwCreateWindow(WindowWidth, WindowHeight, InWindowTitle, nullptr, nullptr);
-	glfwSetWindowUserPointer(InternalWindow, this);
     if (!InternalWindow)
     {
         std::cout << "Failed to create glfw window" << std::endl;
-        glfwTerminate();
+        glfwTerminate();    // FIXME: Failure during window creation will lead to the whole renderer crashing (for all prior windows), move this outside of newWindow :)
         return nullptr;
     }
+
+    glfwSetWindowUserPointer(InternalWindow, this);
 
     glfwMakeContextCurrent(InternalWindow);
 

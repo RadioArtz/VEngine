@@ -20,13 +20,13 @@ private:
 
 
 public:
-	int GetProgramID() { return ProgramID; };
+	int GetProgramID() { return ProgramID; } // FIXME: Probably makes sense to make this a const function
 	int AttachShader(int inShaderID);
 	int LinkProgram();
 	int GetUniformIndex(const std::string& inUniformName);
 	int GetAttributeIndex(const std::string& inAttributeName);
 
-	bool IsReady() { return (ProgramID != -1); };
+	bool IsReady() { return (ProgramID != -1); }; // FIXME: Also maybe better to be const
 
 	template <typename T> int SetShaderValue(const std::string& inUniformName, T inValue)
 	{

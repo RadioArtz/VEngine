@@ -10,10 +10,14 @@ int Texture::SetupGLTexture(int guh)
         imagePath = "C:/Users/mathi/Pictures/contain soundcloud.png";
     if(guh == 2)
         imagePath = "C:/Users/mathi/Pictures/how do i fit him sfw.png";
-    ImageLoader::LoadImage(imagePath, &data, &width, &height, &nrChannels);
+
+    unsigned char* data;
+    if (ImageLoader::LoadImage(imagePath, data, width, height, nrChannels) != 0)
+        return -1;
 
     if (!data)
         return -1;
+
     glGenTextures(1, &glTexture);
     //glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, glTexture);

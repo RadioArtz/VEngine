@@ -3,7 +3,6 @@
 class Texture
 {
 private:
-	unsigned char* data;
 	int width, height, nrChannels;
 	std::string imagePath = "game/content/textures/test.jpg";
 	

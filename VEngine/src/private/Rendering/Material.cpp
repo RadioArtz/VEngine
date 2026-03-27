@@ -28,7 +28,7 @@ int Material::QueryParams()
         std::cout << tmp.uniformLocation << " : " << outName << " | type: " << Shader::GlTypeToString(paramType) << std::endl;
     }
     return num;
-};
+}
 
 int Material::InitializeMaterial(ShaderDef* inShaderDef)
 {
@@ -52,7 +52,7 @@ int Material::InitializeMaterial(ShaderDef* inShaderDef)
 
     QueryParams();
     return 0;
-};
+}
 
 int Material::SetTextureParam(const std::string& inParamName, Texture* inTexture)
 {
@@ -82,16 +82,18 @@ int Material::SetTextureParam(const std::string& inParamName, Texture* inTexture
             std::cout << "Exact Texture already bound to slot '" << inParamName << "'! Skipping.. " << std::endl;
             return 1;
         }
+
+        // FIXME: This code path doesn't return a value
         textureBindings[inParamName] = TextureBinding(inParamName, inTexture);
         std::cout << "rebound param '" << inParamName << "' with new texture" << std::endl;
     }
-};
+}
 
 void Material::RenderMaterial() 
 {
     glUseProgram(activeShader.GetProgramID());
     int textureUnit = 0;
-    int numTexBindings = textureBindings.size();
+    int numTexBindings = textureBindings.size(); // FIXME, pedantic: implicit type conversion with (will-never-happen) data loss risk. compiler doesn't like it though. should be size_t
 
     if(numTexBindings == 0)
     {

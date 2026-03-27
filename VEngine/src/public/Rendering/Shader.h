@@ -25,12 +25,12 @@ public:
 	~Shader();
 
 private:
-	EShaderType ShaderType;
-	std::string ShaderPath;
+	EShaderType ShaderType; // FIXME: Maybe add a default value 
+	std::string ShaderPath; // can initialize like this .. ShaderPath{};
 	int ShaderID = -1;
 
 public:
-	int GetShaderID() { return ShaderID; };
+	int GetShaderID() { return ShaderID; } // FIXME: Better be const!!
 	int CompileShader();
 	int SetShaderSource(const std::string& inShaderPath, const EShaderType inShaderType);
 	static int VShaderTypeToGLShaderEnum(const EShaderType inShaderType)
@@ -41,7 +41,7 @@ public:
 		case EShaderType::Vertex: return GL_VERTEX_SHADER;
 		};
 	};
-	bool IsCompiled() { return (ShaderID != -1); };
+	bool IsCompiled() { return (ShaderID != -1); } // FIXME: Better be const!!
 
 	static const char* GlTypeToString(GLenum type) {
 		switch (type) 
@@ -54,7 +54,7 @@ public:
 		case GL_BOOL:	return "bool";
 		case GL_FLOAT_MAT4:	return "mat4";
 		case GL_SAMPLER_2D:	return "sampler2D";
-		default: return "undefined uniform!";
+		default: return "undefined uniform!";	// NO! unknown type! :D
 		}
 	}
 };
