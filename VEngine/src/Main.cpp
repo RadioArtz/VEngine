@@ -129,6 +129,7 @@ int EngineInit()
 
     PrepareShader(testmaterial, false);
     PrepareShader(testmaterial2, true);
+    testmaterial->SetMaterialParam("_time", 0.0f);
 
     testTex.SetupGLTexture(0);
     testTex2.SetupGLTexture(1);
