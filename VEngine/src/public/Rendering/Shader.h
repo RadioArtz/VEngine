@@ -40,8 +40,8 @@ public:
 		case EShaderType::Fragment: return GL_FRAGMENT_SHADER;
 		case EShaderType::Vertex: return GL_VERTEX_SHADER;
 		};
-	};
-	bool IsCompiled() { return (ShaderID != -1); };
+	}
+	bool IsCompiled() { return (ShaderID != -1); }
 
 	static const char* GlTypeToString(GLenum type) {
 		switch (type) 

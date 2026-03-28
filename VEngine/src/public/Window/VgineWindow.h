@@ -17,7 +17,7 @@ public:
 	GLFWwindow* NewWindow(const char* InWindowTitle, const WindowType InFullscreenMode);
 	GLFWwindow* GetInternalGLFWwindow();
 	int ResizeFrameBuffer(unsigned int Width, unsigned int Height);
-	const glm::vec2 GetWindowSize() { return glm::vec2(WindowWidth, WindowHeight); };
+	const glm::vec2 GetWindowSize() { return glm::vec2(WindowWidth, WindowHeight); }
 
 private:
 	GLFWwindow* InternalWindow;

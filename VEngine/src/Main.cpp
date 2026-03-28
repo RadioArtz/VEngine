@@ -112,8 +112,14 @@ ShaderDef basicMaterialDef = ShaderDef(
     "BasicFlatLayeredMaterial",
     "game/content/shaders/unlitDefault.vert",
     "game/content/shaders/unlitDefault.frag");
+
 Material* testmaterial;
 Material* testmaterial2;
+
+Transform cameraTransform = Transform();
+Transform cubeTransform = Transform();
+Camera awesomeCamera = Camera(&cameraTransform);
+
 int EngineInit() 
 {
     std::string exeLocation = FilesystemExtensions::GetExeLocation();
@@ -157,13 +163,11 @@ int EngineInit()
     
 void InputTick(GLFWwindow* window) 
 {
+    HandleCameraInput(&cameraTransform);
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         ExitToDesktop();
-}
 
-Transform cameraTransform = Transform();
-Transform cubeTransform = Transform();
-Camera awesomeCamera = Camera(&cameraTransform);
+}
 
 void RenderTick() 
 {
@@ -172,7 +176,6 @@ void RenderTick()
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    HandleCameraInput(&cameraTransform);
     testmaterial2->SetMaterialParam("_time", timeValue);
 
     cubeTransform.SetLocation(glm::vec3(0.0f, 0.0f, 0.0f));
@@ -208,7 +211,7 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
     mouseLastX = xpos;
     mouseLastY = ypos;
     //std::cout << mouseOffsetX << " : " << mouseOffsetY << std::endl;
-};
+}
 
 void HandleCameraInput(Transform* camTrans) 
 {

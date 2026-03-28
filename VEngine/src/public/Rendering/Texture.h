@@ -11,7 +11,7 @@ private:
 public:
 	int SetupGLTexture(int guh);
 	void ActivateTexture(int TextureUnit);
-	int GetGLTexture() { return glTexture; };
+	int GetGLTexture() { return glTexture; }
 };
 
 enum class EMipMode 

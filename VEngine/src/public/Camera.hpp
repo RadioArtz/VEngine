@@ -29,7 +29,7 @@ public:
 			isViewDirty = false;
 		}
 		return view;
-	};
+	}
 
 	const glm::mat4& GetProjectionMatrix() 
 	{
@@ -41,15 +41,15 @@ public:
 		return projection;
 	}
 	
-	void SetAspectRatio(float inAspect = 1.7777f) { aspectRatio = inAspect; isPerspectiveDirty = true; };
-	const float& GetAspectRatio() { return aspectRatio; };
+	void SetAspectRatio(float inAspect = 1.7777f) { aspectRatio = inAspect; isPerspectiveDirty = true; }
+	const float& GetAspectRatio() { return aspectRatio; }
 
-	void SetFieldOfView(float inFOV = 45.0f) { verticalFOV = inFOV; isPerspectiveDirty = true; };
-	const float& GetFieldOfView() const { return verticalFOV; };
+	void SetFieldOfView(float inFOV = 45.0f) { verticalFOV = inFOV; isPerspectiveDirty = true; }
+	const float& GetFieldOfView() const { return verticalFOV; }
 
-	void SetNearClipPlane(float inNearClip = 0.01f) { nearClip = inNearClip; isPerspectiveDirty = true; };
-	const float& GetNearClipPlane() const { return nearClip; };
+	void SetNearClipPlane(float inNearClip = 0.01f) { nearClip = inNearClip; isPerspectiveDirty = true; }
+	const float& GetNearClipPlane() const { return nearClip; }
 
-	void SetFarClipPlane(float inFarclip = 1000.0f) { farClip = inFarclip; isPerspectiveDirty = true; };
-	const float& GetFarClipPlane() const { return farClip; };
+	void SetFarClipPlane(float inFarclip = 1000.0f) { farClip = inFarclip; isPerspectiveDirty = true; }
+	const float& GetFarClipPlane() const { return farClip; }
 };

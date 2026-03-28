@@ -13,16 +13,16 @@ public:
 private:
 	int ProgramID = -1;
 
-	void UpdateUniform(int inUniformLocation, float inValue) { glUniform1f(inUniformLocation, inValue); };
-	void UpdateUniform(int inUniformLocation, int inValue) { glUniform1i(inUniformLocation, inValue); };
-	void UpdateUniform(int inUniformLocation, glm::vec2 inValue) { glUniform2f(inUniformLocation, inValue.x, inValue.y); };
-	void UpdateUniform(int inUniformLocation, glm::vec3 inValue) { glUniform3f(inUniformLocation, inValue.x, inValue.y, inValue.z); };
-	void UpdateUniform(int inUniformLocation, glm::vec4 inValue) { glUniform4f(inUniformLocation, inValue.x, inValue.y, inValue.z, inValue.w); };
-	void UpdateUniform(int inUniformLocation, glm::mat4 inValue) { glUniformMatrix4fv(inUniformLocation, 1, GL_FALSE, glm::value_ptr(inValue)); };
+	void UpdateUniform(int inUniformLocation, float inValue) { glUniform1f(inUniformLocation, inValue); }
+	void UpdateUniform(int inUniformLocation, int inValue) { glUniform1i(inUniformLocation, inValue); }
+	void UpdateUniform(int inUniformLocation, glm::vec2 inValue) { glUniform2f(inUniformLocation, inValue.x, inValue.y); }
+	void UpdateUniform(int inUniformLocation, glm::vec3 inValue) { glUniform3f(inUniformLocation, inValue.x, inValue.y, inValue.z); }
+	void UpdateUniform(int inUniformLocation, glm::vec4 inValue) { glUniform4f(inUniformLocation, inValue.x, inValue.y, inValue.z, inValue.w); }
+	void UpdateUniform(int inUniformLocation, glm::mat4 inValue) { glUniformMatrix4fv(inUniformLocation, 1, GL_FALSE, glm::value_ptr(inValue)); }
 
 
 public:
-	int GetProgramID() { return ProgramID; };
+	int GetProgramID() { return ProgramID; }
 	int AttachShader(int inShaderID);
 	int LinkProgram();
 	int GetUniformIndex(const std::string& inUniformName);
@@ -41,11 +41,11 @@ public:
 
 		UpdateUniform(uniformLocation, inValue);
 		return glGetError();
-	};
+	}
 
 	template <typename T> int SetShaderValue(int uniformLocation, T inValue)
 	{
 		UpdateUniform(uniformLocation, inValue);
 		return glGetError();
-	};
+	}
 };

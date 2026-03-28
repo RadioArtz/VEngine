@@ -53,7 +53,7 @@ public:
 	template <typename T> int SetMaterialParam(const std::string& inParamName, T inValue)
 	{
 			return SetValueParamCached(inParamName, (UniformVal)inValue);
-	};
+	}
 
 	void RenderMaterial();
 

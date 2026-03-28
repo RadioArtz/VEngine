@@ -28,7 +28,7 @@ int Material::QueryParams()
         std::cout << tmp.uniformLocation << " : " << outName << " | type: " << Shader::GlTypeToString(paramType) << std::endl;
     }
     return num;
-};
+}
 
 int Material::InitializeMaterial(ShaderDef* inShaderDef)
 {
@@ -52,7 +52,7 @@ int Material::InitializeMaterial(ShaderDef* inShaderDef)
 
     QueryParams();
     return 0;
-};
+}
 
 int Material::SetValueParamCached(const std::string& inParamName, UniformVal inValue)
 {
@@ -69,7 +69,7 @@ int Material::SetValueParamCached(const std::string& inParamName, UniformVal inV
         return 0;
     }
     return 0;
-};
+}
 
 void Material::RenderMaterial() 
 {
