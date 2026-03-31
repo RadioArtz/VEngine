@@ -4,18 +4,15 @@
 #include <glad/glad.h>
 
 
-int Texture::SetupGLTexture(int guh)
+int Texture::SetupGLTexture()
 {
-    if(guh == 1)
-        imagePath = "C:/Users/mathi/Pictures/contain soundcloud.png";
-    if(guh == 2)
-        imagePath = "C:/Users/mathi/Pictures/how do i fit him sfw.png";
+
     ImageLoader::LoadImage(imagePath, &data, &width, &height, &nrChannels);
 
     if (!data)
         return -1;
     glGenTextures(1, &glTexture);
-    //glActiveTexture(GL_TEXTURE0);
+
     glBindTexture(GL_TEXTURE_2D, glTexture);
     if(nrChannels == 4)
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);

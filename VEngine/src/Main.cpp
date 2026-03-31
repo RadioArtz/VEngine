@@ -15,6 +15,8 @@
 #include <Camera.hpp>
 #include <Rendering/Texture.h>
 #include <Rendering/Material.h>
+#include <Rendering/Mesh.h>
+#include <Rendering/ModelLoader.hpp>
 
 
 void InputTick(GLFWwindow* window);
@@ -33,80 +35,13 @@ float lastTime;
     int WinMain() { return EngineInit(); }
 #endif
 
-#pragma region shaders
-    /*
-    float vertices[] = {
-        // positions          // colors           // texture coords
-         0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // top right
-         0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // bottom right
-        -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // bottom left
-        -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // top left 
-    };*/
-    float vertices[] = {
-    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-     0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-    -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-
-    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-    -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-     0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-     0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-
-    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-    -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
-    };
-
-unsigned int indices[] = {
-    0, 1, 3,
-    1, 2, 3
-};
-
-unsigned int VBO;
-unsigned int VAO;
-unsigned int EBO;
-#pragma endregion
-
-ShaderProgram* Basic2DShader;
-unsigned int myTexture;
-
 double mouseLastX;
 double mouseLastY;
 float mouseOffsetX;
 float mouseOffsetY;
 
-Texture testTex = Texture();
-Texture testTex2 = Texture();
-Texture testTex3 = Texture();
+//Texture testTex = Texture("C:/Users/mathi/Downloads/viking_room.png");
+Texture testTex;
 
 ShaderDef basicMaterialDef = ShaderDef(
     "BasicFlatLayeredMaterial",
@@ -114,11 +49,11 @@ ShaderDef basicMaterialDef = ShaderDef(
     "game/content/shaders/unlitDefault.frag");
 
 Material* testmaterial;
-Material* testmaterial2;
 
 Transform cameraTransform = Transform();
 Transform cubeTransform = Transform();
 Camera awesomeCamera = Camera(&cameraTransform);
+ModelLoader loader;
 
 int EngineInit() 
 {
@@ -131,16 +66,16 @@ int EngineInit()
     GLFWwindow* GLWindow = EngineWindow->GetInternalGLFWwindow();
 
     testmaterial = new Material(basicMaterialDef, false);
-    testmaterial2 = new Material(basicMaterialDef, false);
 
     PrepareShader(testmaterial, false);
-    PrepareShader(testmaterial2, true);
     testmaterial->SetMaterialParam("_time", 0.0f);
 
-    testTex.SetupGLTexture(0);
-    testTex2.SetupGLTexture(1);
-    testTex3.SetupGLTexture(2);
+    testTex = Texture("C:/Users/mathi/Documents/Atlas_Albedo.png");
+    testTex.SetupGLTexture();
 
+    loader.loadModel("C:/Users/mathi/Documents/Kerie Opt.fbx");
+
+    cubeTransform.SetRotation(-90, 0, 180);
     glEnable(GL_DEPTH_TEST);
     lastTime = glfwGetTime();
     mouseLastX = EngineWindow->GetWindowSize().x / 2.0f;
@@ -168,38 +103,24 @@ void InputTick(GLFWwindow* window)
         ExitToDesktop();
 
 }
-
+float rotationRate = 1;
 void RenderTick() 
 {
 	float timeValue = glfwGetTime();
 
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    testmaterial2->SetMaterialParam("_time", timeValue);
-
-    cubeTransform.SetLocation(glm::vec3(0.0f, 0.0f, 0.0f));
+    rotationRate += deltaTime * 1.0f;
+    cubeTransform.AddRotation(0 , 0 , deltaTime * 30.0f * rotationRate);
+    testmaterial->RenderMaterial();
+    //testmaterial->SetMaterialParam("_time", timeValue);
 
     testmaterial->SetMaterialParam("_model", cubeTransform.GetTransformMatrix());
     testmaterial->SetMaterialParam("_view", awesomeCamera.GetViewMatrix());
     testmaterial->SetMaterialParam("_projection", awesomeCamera.GetProjectionMatrix());
 
-	cubeTransform.SetLocation(glm::vec3(0.0f, 0.0f, 1.0f));
+    loader.meshes[0].Draw();
 
-    testmaterial2->SetMaterialParam("_model", cubeTransform.GetTransformMatrix());
-    testmaterial2->SetMaterialParam("_view", awesomeCamera.GetViewMatrix());
-    testmaterial2->SetMaterialParam("_projection", awesomeCamera.GetProjectionMatrix());
-
-
-    testmaterial->RenderMaterial();
-    glBindVertexArray(VAO);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-
-    glDrawArrays(GL_TRIANGLES, 0, 36);
-
-    testmaterial2->RenderMaterial();
-	glDrawArrays(GL_TRIANGLES, 0, 36);
-    glBindVertexArray(0);
 }
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos) 
@@ -248,37 +169,13 @@ void ExitToDesktop()
 void PrepareShader(Material* inMaterial, bool randomBogus)
 {
     inMaterial->InitializeMaterial();
+    glUseProgram(inMaterial->GetActiveShader()->GetProgramID());
 
-    Basic2DShader = inMaterial->GetActiveShader();
 
-    glUseProgram(Basic2DShader->GetProgramID());
-
-    glGenBuffers(1, &VBO);
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &EBO);
-    glBindVertexArray(VAO);
-
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    //glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-    int aPosLocation = Basic2DShader->GetAttributeIndex("aPos");
-    glVertexAttribPointer(aPosLocation, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(aPosLocation);
-
-    //int aColorLocation = Basic2DShader->GetAttributeIndex("aColor");
-    //glVertexAttribPointer(aColorLocation, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-    //glEnableVertexAttribArray(aColorLocation);
-
-    int aUVLocation = Basic2DShader->GetAttributeIndex("aTexCoord");
-    glVertexAttribPointer(aUVLocation, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(aUVLocation);
-
-    inMaterial->SetMaterialParam("_OverlayTex", &testTex3);
-    if (randomBogus)
+    
+    //inMaterial->SetMaterialParam("_OverlayTex", &testTex3);
+    //if (randomBogus)
         inMaterial->SetMaterialParam("_MainTex", &testTex);
-    else
-        inMaterial->SetMaterialParam("_MainTex", &testTex2);
+    //else
+    //    inMaterial->SetMaterialParam("_MainTex", &testTex2);
 }

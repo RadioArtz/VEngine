@@ -2,6 +2,9 @@
 #include <string>
 class Texture
 {
+public:
+	Texture() = default;
+	Texture(std::string inPath) { imagePath = inPath; }
 private:
 	unsigned char* data;
 	int width, height, nrChannels;
@@ -9,7 +12,7 @@ private:
 	
 	unsigned int glTexture;
 public:
-	int SetupGLTexture(int guh);
+	int SetupGLTexture();
 	void ActivateTexture(int TextureUnit);
 	int GetGLTexture() { return glTexture; }
 };

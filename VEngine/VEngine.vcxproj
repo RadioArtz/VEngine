@@ -118,7 +118,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;assimp-vc145-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -144,6 +144,7 @@
     <ClCompile Include="src\private\IO\FilesystemExtensions.cpp" />
     <ClCompile Include="src\private\IO\ImageLoader.cpp" />
     <ClCompile Include="src\private\Rendering\Material.cpp" />
+    <ClCompile Include="src\private\Rendering\Mesh.cpp" />
     <ClCompile Include="src\private\Rendering\Shader.cpp" />
     <ClCompile Include="src\private\Rendering\ShaderProgram.cpp" />
     <ClCompile Include="src\private\Window\VgineWindow.cpp" />
@@ -154,6 +155,8 @@
     <ClInclude Include="src\public\IO\FilesystemExtensions.h" />
     <ClInclude Include="src\public\IO\ImageLoader.h" />
     <ClInclude Include="src\public\Rendering\Material.h" />
+    <ClInclude Include="src\public\Rendering\Mesh.h" />
+    <ClInclude Include="src\public\Rendering\ModelLoader.hpp" />
     <ClInclude Include="src\public\Rendering\Shader.h" />
     <ClInclude Include="src\public\Rendering\ShaderProgram.h" />
     <ClInclude Include="src\public\Transform.hpp" />
