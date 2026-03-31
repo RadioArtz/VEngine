@@ -45,6 +45,9 @@
     <ClCompile Include="src\private\Rendering\Mesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\private\Rendering\Light.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\public\Window\VgineWindow.h">
@@ -80,6 +83,9 @@
     <ClInclude Include="src\public\Rendering\ModelLoader.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\public\Rendering\Light.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="content\shaders\unlitDefault.frag" />
@@ -87,5 +93,6 @@
     <CopyFileToFolders Include="content\textures\test.jpg">
       <Filter>Resource Files</Filter>
     </CopyFileToFolders>
+    <CopyFileToFolders Include="content\shaders\litDefault.frag" />
   </ItemGroup>
 </Project>

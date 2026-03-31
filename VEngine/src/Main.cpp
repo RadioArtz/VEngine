@@ -17,6 +17,7 @@
 #include <Rendering/Material.h>
 #include <Rendering/Mesh.h>
 #include <Rendering/ModelLoader.hpp>
+#include <Rendering/Light.h>
 
 
 void InputTick(GLFWwindow* window);
@@ -41,12 +42,17 @@ float mouseOffsetX;
 float mouseOffsetY;
 
 //Texture testTex = Texture("C:/Users/mathi/Downloads/viking_room.png");
-Texture testTex;
+Texture albedoTexture;
+Texture emissiveTexture;
 
 ShaderDef basicMaterialDef = ShaderDef(
-    "BasicFlatLayeredMaterial",
+    "BasicFlatMaterial",
     "game/content/shaders/unlitDefault.vert",
     "game/content/shaders/unlitDefault.frag");
+ShaderDef basicLitDef = ShaderDef(
+    "BasicLitMaterial",
+    "game/content/shaders/unlitDefault.vert",
+    "game/content/shaders/litDefault.frag");
 
 Material* testmaterial;
 
@@ -54,6 +60,7 @@ Transform cameraTransform = Transform();
 Transform cubeTransform = Transform();
 Camera awesomeCamera = Camera(&cameraTransform);
 ModelLoader loader;
+PointLight testLight;
 
 int EngineInit() 
 {
@@ -65,13 +72,19 @@ int EngineInit()
     EngineWindow = new VgineWindow();
     GLFWwindow* GLWindow = EngineWindow->GetInternalGLFWwindow();
 
-    testmaterial = new Material(basicMaterialDef, false);
+    testmaterial = new Material(basicLitDef, false);
 
     PrepareShader(testmaterial, false);
     testmaterial->SetMaterialParam("_time", 0.0f);
 
-    testTex = Texture("C:/Users/mathi/Documents/Atlas_Albedo.png");
-    testTex.SetupGLTexture();
+    albedoTexture = Texture("C:/Users/mathi/Documents/Atlas_Albedo_8k.png");
+    albedoTexture.SetupGLTexture();
+    emissiveTexture = Texture("C:/Users/mathi/Documents/Atlas_Emissive.png");
+    emissiveTexture.SetupGLTexture();
+
+    testmaterial->SetMaterialParam("_MainTex", &albedoTexture);
+    testmaterial->SetMaterialParam("_EmissiveTex", &emissiveTexture);
+    testmaterial->SetMaterialParam("lightPosition", cameraTransform.GetLocation());
 
     loader.loadModel("C:/Users/mathi/Documents/Kerie Opt.fbx");
 
@@ -104,21 +117,29 @@ void InputTick(GLFWwindow* window)
 
 }
 float rotationRate = 1;
+    glm::vec3 bgColor(0.2f, 0.3f, 0.3f);
 void RenderTick() 
 {
 	float timeValue = glfwGetTime();
-
-    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+    glClearColor(bgColor.x, bgColor.y, bgColor.z, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     rotationRate += deltaTime * 1.0f;
-    cubeTransform.AddRotation(0 , 0 , deltaTime * 30.0f * rotationRate);
-    testmaterial->RenderMaterial();
+    cubeTransform.AddRotation(0 , 0 , deltaTime * 30.0f);
     //testmaterial->SetMaterialParam("_time", timeValue);
 
+    testmaterial->SetMaterialParam("_ambientColor", bgColor);
+    testmaterial->SetMaterialParam("diffuseColor", glm::vec3(1));
+    testmaterial->SetMaterialParam("diffuseLightColor", (testLight.diffuseColor.Color * testLight.diffuseColor.Intensity));
+
+    testmaterial->SetMaterialParam("specularHardness", testLight.specularHardness);
+    testmaterial->SetMaterialParam("specularLightColor", (testLight.specularColor.Color * testLight.specularColor.Intensity));
+
+    testmaterial->SetMaterialParam("_viewPos", cameraTransform.GetLocation());
     testmaterial->SetMaterialParam("_model", cubeTransform.GetTransformMatrix());
     testmaterial->SetMaterialParam("_view", awesomeCamera.GetViewMatrix());
     testmaterial->SetMaterialParam("_projection", awesomeCamera.GetProjectionMatrix());
 
+    testmaterial->RenderMaterial();
     loader.meshes[0].Draw();
 
 }
@@ -153,7 +174,8 @@ void HandleCameraInput(Transform* camTrans)
         camTrans->AddLocation(cameraSpeed * camTrans->GetUpVector());
     if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
         camTrans->AddLocation(cameraSpeed * -camTrans->GetUpVector());
-        
+    if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS)
+        testmaterial->SetMaterialParam("lightPosition", cameraTransform.GetLocation());
 
     camTrans->AddRotation(-mouseOffsetY, mouseOffsetX, 0);
     mouseOffsetX = 0;
@@ -170,12 +192,4 @@ void PrepareShader(Material* inMaterial, bool randomBogus)
 {
     inMaterial->InitializeMaterial();
     glUseProgram(inMaterial->GetActiveShader()->GetProgramID());
-
-
-    
-    //inMaterial->SetMaterialParam("_OverlayTex", &testTex3);
-    //if (randomBogus)
-        inMaterial->SetMaterialParam("_MainTex", &testTex);
-    //else
-    //    inMaterial->SetMaterialParam("_MainTex", &testTex2);
 }
