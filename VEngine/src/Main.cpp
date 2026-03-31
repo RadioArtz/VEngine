@@ -90,6 +90,7 @@ int EngineInit()
 
     cubeTransform.SetRotation(-90, 0, 180);
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_FRAMEBUFFER_SRGB);
     lastTime = glfwGetTime();
     mouseLastX = EngineWindow->GetWindowSize().x / 2.0f;
     mouseLastY = EngineWindow->GetWindowSize().y / 2.0f;
@@ -117,7 +118,7 @@ void InputTick(GLFWwindow* window)
 
 }
 float rotationRate = 1;
-    glm::vec3 bgColor(0.2f, 0.3f, 0.3f);
+    glm::vec3 bgColor(0.1f, 0.15f, 0.15f);
 void RenderTick() 
 {
 	float timeValue = glfwGetTime();

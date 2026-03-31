@@ -24,21 +24,21 @@ void main()
     vec4 emissiveTex = texture(_EmissiveTex, TexCoord);
 
     //ambient
-    float ambientStrength = 1f;
+    float ambientStrength = 1.0f;
     vec3 ambientLight = ambientStrength * _ambientColor;
 
     //diff
     vec3 norm = normalize(Normal);
     vec3 lightDir = normalize(lightPosition - FragPos);  
 
-    float diffuseStrength = max(dot(norm, lightDir),0.0);
+    float diffuseStrength = max(dot(norm, lightDir),0.0f);
     vec3 diffuseLight = diffuseStrength * diffuseLightColor;
 
     //spec
     vec3 viewDir = normalize(_viewPos - FragPos);
     vec3 reflectDir = reflect(-lightDir, norm);  
 
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), specularHardness);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0f), specularHardness);
     vec3 specularLight = spec * specularLightColor;
 
     //final
