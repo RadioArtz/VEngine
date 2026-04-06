@@ -77,16 +77,20 @@ int EngineInit()
     PrepareShader(testmaterial, false);
     testmaterial->SetMaterialParam("_time", 0.0f);
 
+    /*
     albedoTexture = Texture("C:/Users/mathi/Documents/Atlas_Albedo_8k.png");
     albedoTexture.SetupGLTexture();
     emissiveTexture = Texture("C:/Users/mathi/Documents/Atlas_Emissive.png");
-    emissiveTexture.SetupGLTexture();
+    emissiveTexture.SetupGLTexture();*/
+
+    albedoTexture = Texture("C:/Users/mathi/Downloads/viking_room.png");
+    albedoTexture.SetupGLTexture();
 
     testmaterial->SetMaterialParam("_MainTex", &albedoTexture);
     testmaterial->SetMaterialParam("_EmissiveTex", &emissiveTexture);
     testmaterial->SetMaterialParam("lightPosition", cameraTransform.GetLocation());
 
-    loader.loadModel("C:/Users/mathi/Documents/Kerie Opt.fbx");
+    loader.loadModel("C:/Users/mathi/Downloads/viking_room.obj");
 
     cubeTransform.SetRotation(-90, 0, 180);
     glEnable(GL_DEPTH_TEST);
@@ -118,7 +122,7 @@ void InputTick(GLFWwindow* window)
 
 }
 float rotationRate = 1;
-    glm::vec3 bgColor(0.1f, 0.15f, 0.15f);
+    glm::vec3 bgColor(0.5f, 0.65f, 0.65f);
 void RenderTick() 
 {
 	float timeValue = glfwGetTime();
@@ -127,6 +131,7 @@ void RenderTick()
     rotationRate += deltaTime * 1.0f;
     cubeTransform.AddRotation(0 , 0 , deltaTime * 30.0f);
     //testmaterial->SetMaterialParam("_time", timeValue);
+    testLight.specularColor.Intensity = 5.0f;
 
     testmaterial->SetMaterialParam("_ambientColor", bgColor);
     testmaterial->SetMaterialParam("diffuseColor", glm::vec3(1));

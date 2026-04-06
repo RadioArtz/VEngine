@@ -6,7 +6,6 @@ public:
 	Texture() = default;
 	Texture(std::string inPath) { imagePath = inPath; }
 private:
-	unsigned char* data;
 	int width, height, nrChannels;
 	std::string imagePath = "game/content/textures/test.jpg";
 	

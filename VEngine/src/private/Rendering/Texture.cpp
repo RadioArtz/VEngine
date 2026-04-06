@@ -6,8 +6,9 @@
 
 int Texture::SetupGLTexture()
 {
-
-    ImageLoader::LoadImage(imagePath, &data, &width, &height, &nrChannels);
+    unsigned char* data;
+    if (ImageLoader::LoadImage(imagePath, data, &width, &height, &nrChannels) != 0)
+        return -1;
 
     if (!data)
         return -1;

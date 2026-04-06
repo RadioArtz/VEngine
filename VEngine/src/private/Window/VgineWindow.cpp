@@ -16,7 +16,6 @@ GLFWwindow* VgineWindow::NewWindow(const char* InWindowTitle, const WindowType I
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     InternalWindow = glfwCreateWindow(WindowWidth, WindowHeight, InWindowTitle, nullptr, nullptr);
-	glfwSetWindowUserPointer(InternalWindow, this);
     if (!InternalWindow)
     {
         std::cout << "Failed to create glfw window" << std::endl;
@@ -24,6 +23,7 @@ GLFWwindow* VgineWindow::NewWindow(const char* InWindowTitle, const WindowType I
         return nullptr;
     }
 
+	glfwSetWindowUserPointer(InternalWindow, this);
     glfwMakeContextCurrent(InternalWindow);
 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))

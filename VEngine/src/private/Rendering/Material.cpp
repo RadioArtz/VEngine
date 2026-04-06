@@ -75,7 +75,7 @@ void Material::RenderMaterial()
 {
     glUseProgram(activeShader.GetProgramID());
     int textureUnit = 0;
-    int numUniforms = uniformCache.size();
+    size_t numUniforms = uniformCache.size();
     int numUnboundTextures = 0;
 
     for (auto& [name, uniformData] : uniformCache) 

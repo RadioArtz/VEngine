@@ -20,7 +20,7 @@ public:
 	const glm::vec2 GetWindowSize() { return glm::vec2(WindowWidth, WindowHeight); }
 
 private:
-	GLFWwindow* InternalWindow;
+	GLFWwindow* InternalWindow = nullptr;
 	int WindowWidth = 1280;
 	int WindowHeight = 720;
 	bool MaintainAspectRatio = false;

@@ -22,13 +22,13 @@ private:
 
 
 public:
-	int GetProgramID() { return ProgramID; }
+	int GetProgramID() const { return ProgramID; }
 	int AttachShader(int inShaderID);
 	int LinkProgram();
 	int GetUniformIndex(const std::string& inUniformName);
 	int GetAttributeIndex(const std::string& inAttributeName);
 
-	bool IsReady() { return (ProgramID != -1); };
+	bool IsReady() const { return (ProgramID != -1); };
 
 	template <typename T> int SetShaderValue(const std::string& inUniformName, T inValue)
 	{
