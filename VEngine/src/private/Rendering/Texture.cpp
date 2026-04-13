@@ -4,7 +4,7 @@
 #include <glad/glad.h>
 
 
-int Texture::SetupGLTexture()
+int VEngine::Texture::SetupGLTexture()
 {
     unsigned char* data;
     if (ImageLoader::LoadImage(imagePath, data, &width, &height, &nrChannels) != 0)
@@ -28,7 +28,7 @@ int Texture::SetupGLTexture()
     return 0;
 }
 
-void Texture::ActivateTexture(int TextureUnit) 
+void VEngine::Texture::ActivateTexture(int TextureUnit)
 {
     glActiveTexture(GL_TEXTURE0 + TextureUnit);
     glBindTexture(GL_TEXTURE_2D, glTexture);

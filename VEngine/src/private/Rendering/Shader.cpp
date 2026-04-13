@@ -4,10 +4,10 @@
 #include <filesystem>
 #include <iostream>
 
-Shader::Shader(){}
-Shader::~Shader() { glDeleteShader(ShaderID); }
+VEngine::Shader::Shader(){}
+VEngine::Shader::~Shader() { glDeleteShader(ShaderID); }
 
-int Shader::CompileShader()
+int VEngine::Shader::CompileShader()
 {
 	int Shader = glCreateShader(VShaderTypeToGLShaderEnum(ShaderType));
 	std::ifstream ShaderReader;
@@ -31,7 +31,7 @@ int Shader::CompileShader()
 	return -1;
 }
 
-int Shader::SetShaderSource(const std::string& inShaderPath, const EShaderType inShaderType)
+int VEngine::Shader::SetShaderSource(const std::string& inShaderPath, const EShaderType inShaderType)
 {
 	std::ifstream ShaderReader;
 	ShaderReader.open(inShaderPath);

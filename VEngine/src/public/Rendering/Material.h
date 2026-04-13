@@ -5,59 +5,63 @@
 #include <Rendering/Texture.h>
 #include <variant>
 
-using UniformVal = std::variant<std::monostate, int, float, glm::vec2, glm::vec3, glm::vec4, glm::mat4, Texture*>;
 
-struct UniformMetadata 
+namespace VEngine
 {
-	UniformMetadata() {};
-	UniformMetadata(std::string inUniformName, int inUniformSize, GLenum inUniformType) :
-		uniformName(std::move(inUniformName)), uniformSize(std::move(inUniformSize)), uniformType(std::move(inUniformType)) {};
-	std::string uniformName = "uninitialized";
-	/// <summary>
-	/// array length, 1 if single element
-	/// </summary>
-	int uniformSize = -1;
-	GLenum uniformType = -1;
-	int uniformLocation = -1;
-	UniformVal uniformValue;
-};
+	using UniformVal = std::variant<std::monostate, int, float, glm::vec2, glm::vec3, glm::vec4, glm::mat4, Texture*>;
 
-class Material
-{
-public:
-	Material() {};
-	Material(ShaderDef inShaderDef, bool autoInitialize) 
+	struct UniformMetadata 
 	{
-		std::cout << "hi" << std::endl;
-		shaderDef = inShaderDef;
-		if (autoInitialize) 
+		UniformMetadata() {};
+		UniformMetadata(std::string inUniformName, int inUniformSize, GLenum inUniformType) :
+			uniformName(std::move(inUniformName)), uniformSize(std::move(inUniformSize)), uniformType(std::move(inUniformType)) {};
+		std::string uniformName = "uninitialized";
+		/// <summary>
+		/// array length, 1 if single element
+		/// </summary>
+		int uniformSize = -1;
+		GLenum uniformType = -1;
+		int uniformLocation = -1;
+		UniformVal uniformValue;
+	};
+
+	class Material
+	{
+	public:
+		Material() {};
+		Material(ShaderDef inShaderDef, bool autoInitialize) 
 		{
-			InitializeMaterial();
+			std::cout << "hi" << std::endl;
+			shaderDef = inShaderDef;
+			if (autoInitialize) 
+			{
+				InitializeMaterial();
+			}
 		}
-	}
 
-private:
-	ShaderDef shaderDef;
-	ShaderProgram activeShader;
-	unsigned int numUniforms = 0;
-	std::unordered_map<std::string, UniformMetadata> uniformCache;
+	private:
+		ShaderDef shaderDef;
+		ShaderProgram activeShader;
+		unsigned int numUniforms = 0;
+		std::unordered_map<std::string, UniformMetadata> uniformCache;
 
-	int QueryParams();
-public:
-	void SetShader(ShaderDef inShader) {};
-	ShaderDef GetShaderInfo() { return shaderDef; };
-	ShaderProgram* GetActiveShader() { return &activeShader; };
+		int QueryParams();
+	public:
+		void SetShader(ShaderDef inShader) {};
+		ShaderDef GetShaderInfo() { return shaderDef; };
+		ShaderProgram* GetActiveShader() { return &activeShader; };
 
-	int InitializeMaterial(ShaderDef* inShaderDef = nullptr);
+		int InitializeMaterial(ShaderDef* inShaderDef = nullptr);
 
-	template <typename T> int SetMaterialParam(const std::string& inParamName, T inValue)
-	{
-			return SetValueParamCached(inParamName, (UniformVal)inValue);
-	}
+		template <typename T> int SetMaterialParam(const std::string& inParamName, T inValue)
+		{
+				return SetValueParamCached(inParamName, (UniformVal)inValue);
+		}
 
-	void RenderMaterial();
+		void RenderMaterial();
 
-private:
+	private:
 
-	int SetValueParamCached(const std::string& inParamName, UniformVal inValue);
-};
+		int SetValueParamCached(const std::string& inParamName, UniformVal inValue);
+	};
+}

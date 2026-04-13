@@ -1,7 +1,7 @@
 #include "Rendering/Mesh.h"
 #include <glad/glad.h>
 
-void Mesh::PrepareMesh()
+void VEngine::Mesh::PrepareMesh()
 {
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
@@ -28,7 +28,7 @@ void Mesh::PrepareMesh()
     glBindVertexArray(0);
 }
 
-void Mesh::Draw()
+void VEngine::Mesh::Draw()
 {
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);

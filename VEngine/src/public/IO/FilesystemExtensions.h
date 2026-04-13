@@ -1,8 +1,12 @@
 #pragma once
 #include <string>
 
-class FilesystemExtensions
+
+namespace VEngine
 {
-public:
-	static std::string GetExeLocation();
-};
+	class FilesystemExtensions
+	{
+	public:
+		static std::string GetExeLocation();
+	};
+}

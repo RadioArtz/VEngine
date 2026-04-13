@@ -2,7 +2,7 @@
 
 #if _WIN32
 #include <Windows.h>
-std::string FilesystemExtensions::GetExeLocation()
+std::string VEngine::FilesystemExtensions::GetExeLocation()
 {
 	char result[MAX_PATH];
 
@@ -15,7 +15,7 @@ std::string FilesystemExtensions::GetExeLocation()
 #include <linux/limits.h>
 #include <vector>
 
-std::string FilesystemExtensions::GetExeLocation()
+std::string VEngine::FilesystemExtensions::GetExeLocation()
 {
 	std::vector<char> buffer(PATH_MAX);
 

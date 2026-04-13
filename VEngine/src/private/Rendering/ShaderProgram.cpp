@@ -2,22 +2,22 @@
 #include <vector>
 #include <iostream>
 
-ShaderProgram::ShaderProgram() { ProgramID = glCreateProgram(); }
-ShaderProgram::~ShaderProgram() { glDeleteProgram(ProgramID); }
+VEngine::ShaderProgram::ShaderProgram() { ProgramID = glCreateProgram(); }
+VEngine::ShaderProgram::~ShaderProgram() { glDeleteProgram(ProgramID); }
 
-int ShaderProgram::AttachShader(int inShaderID)
+int VEngine::ShaderProgram::AttachShader(int inShaderID)
 {
 	glAttachShader(ProgramID, inShaderID);
 	return glGetError();
 }
 
-int ShaderProgram::LinkProgram()
+int VEngine::ShaderProgram::LinkProgram()
 {
 	glLinkProgram(ProgramID);
 	return glGetError();
 }
 
-int ShaderProgram::GetUniformIndex(const std::string& inUniformName)
+int VEngine::ShaderProgram::GetUniformIndex(const std::string& inUniformName)
 {
 	int uniformLocation = glGetUniformLocation(ProgramID, inUniformName.c_str());
 	if (uniformLocation == -1)
@@ -25,7 +25,7 @@ int ShaderProgram::GetUniformIndex(const std::string& inUniformName)
 	return uniformLocation;
 }
 
-int ShaderProgram::GetAttributeIndex(const std::string& inAttributeName)
+int VEngine::ShaderProgram::GetAttributeIndex(const std::string& inAttributeName)
 {
 	int attributeLocation = glGetAttribLocation(ProgramID, inAttributeName.c_str());
 	if (attributeLocation == -1)

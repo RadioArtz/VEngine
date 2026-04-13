@@ -1,6 +1,6 @@
 #include "Rendering/Material.h"
 
-int Material::QueryParams()
+int VEngine::Material::QueryParams()
 {
     if (!activeShader.IsReady())
     {
@@ -30,7 +30,7 @@ int Material::QueryParams()
     return num;
 }
 
-int Material::InitializeMaterial(ShaderDef* inShaderDef)
+int VEngine::Material::InitializeMaterial(ShaderDef* inShaderDef)
 {
     if (inShaderDef)
         shaderDef = *inShaderDef;
@@ -54,7 +54,7 @@ int Material::InitializeMaterial(ShaderDef* inShaderDef)
     return 0;
 }
 
-int Material::SetValueParamCached(const std::string& inParamName, UniformVal inValue)
+int VEngine::Material::SetValueParamCached(const std::string& inParamName, UniformVal inValue)
 {
     auto uniformSearch = uniformCache.find(inParamName);
     if (uniformSearch == uniformCache.end())
@@ -71,7 +71,7 @@ int Material::SetValueParamCached(const std::string& inParamName, UniformVal inV
     return 0;
 }
 
-void Material::RenderMaterial() 
+void VEngine::Material::RenderMaterial()
 {
     glUseProgram(activeShader.GetProgramID());
     int textureUnit = 0;

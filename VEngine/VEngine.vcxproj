@@ -72,13 +72,13 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <ExternalIncludePath>$(SolutionDir)Lib\include;$(ExternalIncludePath)</ExternalIncludePath>
+    <ExternalIncludePath>$(SolutionDir)Lib\include;$(SolutionDir)Lib\imgui;$(SolutionDir)Lib\imgui\backends;$(ExternalIncludePath)</ExternalIncludePath>
     <LibraryPath>$(SolutionDir)Lib\library;$(LibraryPath)</LibraryPath>
     <IncludePath>$(ProjectDir)src\public;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>$(ProjectDir)src\public;$(IncludePath)</IncludePath>
-    <ExternalIncludePath>$(SolutionDir)Lib\include;$(ExternalIncludePath)</ExternalIncludePath>
+    <ExternalIncludePath>$(SolutionDir)Lib\include;$(SolutionDir)Lib\imgui;$(SolutionDir)Lib\imgui\backends;$(ExternalIncludePath)</ExternalIncludePath>
     <LibraryPath>$(SolutionDir)Lib\library;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -139,8 +139,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\Lib\imgui\backends\imgui_impl_glfw.cpp" />
+    <ClCompile Include="..\Lib\imgui\backends\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="..\Lib\imgui\imgui.cpp" />
+    <ClCompile Include="..\Lib\imgui\imgui_demo.cpp" />
+    <ClCompile Include="..\Lib\imgui\imgui_draw.cpp" />
+    <ClCompile Include="..\Lib\imgui\imgui_tables.cpp" />
+    <ClCompile Include="..\Lib\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="..\Lib\imgui\misc\cpp\imgui_stdlib.cpp" />
     <ClCompile Include="src\glad.c" />
     <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\private\GameObject.cpp" />
     <ClCompile Include="src\private\IO\FilesystemExtensions.cpp" />
     <ClCompile Include="src\private\IO\ImageLoader.cpp" />
     <ClCompile Include="src\private\Rendering\Light.cpp" />
@@ -150,9 +159,23 @@
     <ClCompile Include="src\private\Rendering\ShaderProgram.cpp" />
     <ClCompile Include="src\private\Window\VgineWindow.cpp" />
     <ClCompile Include="src\private\Rendering\Texture.cpp" />
+    <ClCompile Include="src\public\Game.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Lib\imgui\backends\imgui_impl_glfw.h" />
+    <ClInclude Include="..\Lib\imgui\backends\imgui_impl_opengl3.h" />
+    <ClInclude Include="..\Lib\imgui\backends\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="..\Lib\imgui\imconfig.h" />
+    <ClInclude Include="..\Lib\imgui\imgui.h" />
+    <ClInclude Include="..\Lib\imgui\imgui_internal.h" />
+    <ClInclude Include="..\Lib\imgui\imstb_rectpack.h" />
+    <ClInclude Include="..\Lib\imgui\imstb_textedit.h" />
+    <ClInclude Include="..\Lib\imgui\imstb_truetype.h" />
+    <ClInclude Include="..\Lib\imgui\misc\cpp\imgui_stdlib.h" />
     <ClInclude Include="src\public\Camera.hpp" />
+    <ClInclude Include="src\public\Component.hpp" />
+    <ClInclude Include="src\public\Game.hpp" />
+    <ClInclude Include="src\public\GameObject.h" />
     <ClInclude Include="src\public\IO\FilesystemExtensions.h" />
     <ClInclude Include="src\public\IO\ImageLoader.h" />
     <ClInclude Include="src\public\Rendering\Light.h" />
@@ -161,7 +184,10 @@
     <ClInclude Include="src\public\Rendering\ModelLoader.hpp" />
     <ClInclude Include="src\public\Rendering\Shader.h" />
     <ClInclude Include="src\public\Rendering\ShaderProgram.h" />
+    <ClInclude Include="src\public\Scene.hpp" />
+    <ClInclude Include="src\public\TestScene.hpp" />
     <ClInclude Include="src\public\Transform.hpp" />
+    <ClInclude Include="src\public\TransformComponent.hpp" />
     <ClInclude Include="src\public\Window\VgineWindow.h" />
     <ClInclude Include="src\public\Rendering\Texture.h" />
   </ItemGroup>

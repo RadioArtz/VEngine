@@ -3,13 +3,13 @@
 #include <iostream>
 #include "Window/VgineWindow.h"
 
-VgineWindow::VgineWindow(const char* InWindowTitle, const WindowType InFullscreenMode) { NewWindow(InWindowTitle, InFullscreenMode); }
-GLFWwindow* VgineWindow::GetInternalGLFWwindow() { return InternalWindow; }
+VEngine::VgineWindow::VgineWindow(const char* InWindowTitle, const WindowType InFullscreenMode) { NewWindow(InWindowTitle, InFullscreenMode); }
+GLFWwindow* VEngine::VgineWindow::GetInternalGLFWwindow() { return InternalWindow; }
 
 void Framebuffer_size_callback(GLFWwindow* window, int width, int height)
-{((VgineWindow*)glfwGetWindowUserPointer(window ))->ResizeFrameBuffer(width,height);}
+{((VEngine::VgineWindow*)glfwGetWindowUserPointer(window ))->ResizeFrameBuffer(width,height);}
 
-GLFWwindow* VgineWindow::NewWindow(const char* InWindowTitle, const WindowType InFullscreenMode)
+GLFWwindow* VEngine::VgineWindow::NewWindow(const char* InWindowTitle, const WindowType InFullscreenMode)
 {   
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -38,7 +38,7 @@ GLFWwindow* VgineWindow::NewWindow(const char* InWindowTitle, const WindowType I
     return InternalWindow;
 }
 
-int VgineWindow::ResizeFrameBuffer(unsigned int Width, unsigned int Height)
+int VEngine::VgineWindow::ResizeFrameBuffer(unsigned int Width, unsigned int Height)
 {
     glViewport(0, 0, Width, Height);
     std::cout << "Resized Window: " << Width << " " << Height << std::endl;
