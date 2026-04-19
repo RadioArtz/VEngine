@@ -56,15 +56,15 @@ namespace VEngine
         Material* testmaterial;
 
         Transform cameraTransform = Transform();
-        Transform objTransform = Transform();
+        //Transform objTransform = Transform();
         Camera awesomeCamera = Camera(&cameraTransform);
-        ModelLoader loader;
         PointLight testLight;
 
         float rotationRate = 1;
     
     
-        GameObject johnTester = GameObject{ "Test GameObject" };
+        GameObject testObject = GameObject{ "Test GameObject" };
+        GameObject skibidi = GameObject{ "sigma" };
 
         void OnBeginPlay() 
         {
@@ -80,7 +80,7 @@ namespace VEngine
             testmaterial->SetMaterialParam("_EmissiveTex", &emissiveTexture);
             testmaterial->SetMaterialParam("lightPosition", cameraTransform.GetLocation());
 
-            objTransform.SetRotation(-90, 0, 180);
+            testObject.transform->transform.SetRotation(-90, 0, 180);
 
             mouseLastX = EngineWindow->GetWindowSize().x / 2.0f;
             mouseLastY = EngineWindow->GetWindowSize().y / 2.0f;
@@ -98,7 +98,7 @@ namespace VEngine
             float timeValue = glfwGetTime();
         
             rotationRate += deltaTime * 1.0f;
-            objTransform.AddRotation(0, 0, deltaTime * 30.0f);
+            testObject.transform->transform.AddRotation(0, 0, deltaTime * 30.0f);
 
             //testmaterial->SetMaterialParam("_time", timeValue);
             testLight.specularColor.Intensity = 5.0f;
@@ -111,61 +111,26 @@ namespace VEngine
             testmaterial->SetMaterialParam("specularLightColor", (testLight.specularColor.Color * testLight.specularColor.Intensity));
 
             testmaterial->SetMaterialParam("_viewPos", cameraTransform.GetLocation());
-            testmaterial->SetMaterialParam("_model", objTransform.GetTransformMatrix());
+            testmaterial->SetMaterialParam("_model", testObject.transform->transform.GetTransformMatrix());
             testmaterial->SetMaterialParam("_view", awesomeCamera.GetViewMatrix());
             testmaterial->SetMaterialParam("_projection", awesomeCamera.GetProjectionMatrix());
 
             testmaterial->RenderMaterial();
-            if (!loader.meshes.empty())
-                loader.meshes[0].Draw();
+            if (!VEngine::Game::Get().loader.meshes.empty())
+                for (VEngine::Mesh mesh : VEngine::Game::Get().loader.meshes)
+                {
+                    mesh.Draw();
+                }
+                
 
             ImGui::Render();
             ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         }
-        float floats[3]{ 0,0,0 };
-        void RenderImportDialog()
-        {
-            bool pressed = false;
-            ImGui::Begin("Import Model");
-            ImGui::SetWindowSize(ImVec2(250, 400));
-            std::string input = "C:/Users/mathi/Downloads/viking_room.obj";
-            if (ImGui::Button("Import"))
-            {
-                pressed = true;
-            }
-            ImGui::SameLine();
-            ImGui::InputText("Model Path", &input);
-            if (pressed)
-                loader.loadModel(input);
-
-            if (!loader.meshes.empty())
-            {
-                ImGui::DragFloat3("Location", floats);
-                std::cout << floats[0] << floats[1] << floats[2] << std::endl;
-                objTransform.SetLocation(floats[0], floats[1], floats[2]);
-            }
 
 
-            ImGui::End();
-        };
 
-        bool toolboxOpen = true;
-        bool ImportDialogOpen = false;
         void RenderUI()
         {
-            ImGui::Begin("Toolbox", &toolboxOpen, ImGuiWindowFlags_AlwaysHorizontalScrollbar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar);
-            ImGui::SetWindowSize(ImVec2(350, 100));
-
-            if (ImGui::Button("Import", ImVec2(70, 70)))
-            {
-                ImportDialogOpen = !ImportDialogOpen;
-                std::cout << ImportDialogOpen << std::endl;
-            }
-            ImGui::End();
-
-            if (ImportDialogOpen)
-                RenderImportDialog();
-            RenderSceneHierarchy();
         }
 
         void InputTick(GLFWwindow* window, float deltaTime)
@@ -235,30 +200,6 @@ namespace VEngine
         {
             inMaterial->InitializeMaterial();
             glUseProgram(inMaterial->GetActiveShader()->GetProgramID());
-        }
-
-        void RenderSceneHierarchy()
-        {
-            ImGui::Begin("Scene Hierarchy");
-            ImGui::SetWindowSize(ImVec2(300, 500));
-            for (Scene* scn : Scene::activeScenes)
-            {
-                if (ImGui::CollapsingHeader(scn->sceneName.c_str())) 
-                {
-                    for (GameObject* go : scn->gameObjects) 
-                    {
-                        ImGui::PushID(go);
-
-                        if (ImGui::TreeNode(go->objectName.c_str())) 
-                        {
-                            ImGui::Button("aga");
-                            ImGui::TreePop();
-                        }
-                        ImGui::PopID();
-                    }
-                }
-            }
-            ImGui::End();
         }
     };
 }

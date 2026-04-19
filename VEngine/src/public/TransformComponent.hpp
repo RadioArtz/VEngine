@@ -6,6 +6,7 @@ namespace VEngine
 {
 	class TransformComponent : public Component 
 	{
-
+	public:
+		Transform transform{};
 	};
 }

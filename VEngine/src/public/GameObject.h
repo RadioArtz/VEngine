@@ -3,6 +3,7 @@
 #include <Component.hpp>
 #include <TransformComponent.hpp>
 #include <string>
+#include <utility>
 
 namespace VEngine 
 {
@@ -13,13 +14,22 @@ namespace VEngine
 		std::vector<Component*> components{};
 		GameObject(std::string inName = "GameObject");
 		~GameObject() {};
-	protected:
 		TransformComponent* transform = nullptr;
 
+	protected:
+		class Scene* owningScene = nullptr;
+
 	public: 
-		virtual void OnAwake() {};
-		virtual void OnBeginPlay() {};
-		virtual void OnUpdate() {};
-		virtual void OnConstruct() {};
+		void OnAwake() {};
+		void OnBeginPlay() {};
+		void OnUpdate(double deltaTime);
+		void OnConstruct() {};
+
+		template <std::derived_from<Component> T, typename... Args> T* AddComponent(Args&&... args)
+		{
+			T* comp = new T(std::forward<Args>(args)...);
+			components.push_back(comp);
+			return comp;
+		};
 	};
 }

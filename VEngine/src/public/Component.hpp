@@ -6,5 +6,10 @@ namespace VEngine
 	public:
 		Component() {};
 		virtual ~Component() {};
+
+		virtual void OnAwake() {};
+		virtual void OnBeginPlay() {};
+		virtual void OnUpdate(double deltaTime) {};
+		virtual void OnConstruct() {};
 	};
 }

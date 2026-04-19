@@ -10,6 +10,7 @@
 #include <misc/cpp/imgui_stdlib.h>
 #include <backends/imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
+#include <Rendering/ModelLoader.hpp>
 
 namespace VEngine
 {
@@ -32,5 +33,7 @@ namespace VEngine
         glm::vec3 bgColor = glm::vec3(0.5f, 0.65f, 0.65f);
 
         int EngineInit();
+
+        VEngine::ModelLoader loader;
     };
 }

@@ -159,7 +159,8 @@
     <ClCompile Include="src\private\Rendering\ShaderProgram.cpp" />
     <ClCompile Include="src\private\Window\VgineWindow.cpp" />
     <ClCompile Include="src\private\Rendering\Texture.cpp" />
-    <ClCompile Include="src\public\Game.cpp" />
+    <ClCompile Include="src\private\Game.cpp" />
+    <ClCompile Include="src\private\Scene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Lib\imgui\backends\imgui_impl_glfw.h" />

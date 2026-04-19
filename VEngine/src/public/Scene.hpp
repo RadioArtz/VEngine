@@ -14,7 +14,7 @@ public:
 	std::vector<GameObject*> gameObjects{};
 	void RegisterGO( GameObject* inGO) { gameObjects.push_back(inGO); };
 	virtual void OnRender(float deltaTime) {};
-	virtual void OnUpdate(float deltaTime) {};
+	virtual void OnUpdate(float deltaTime);
 	virtual void OnBeginPlay() {};
 
 	inline static std::vector<Scene*> activeScenes;
