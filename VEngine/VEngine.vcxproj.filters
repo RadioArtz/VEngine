@@ -158,9 +158,6 @@
     <ClInclude Include="src\public\Component.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\public\TransformComponent.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\public\Game.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>

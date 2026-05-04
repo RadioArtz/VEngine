@@ -188,7 +188,6 @@
     <ClInclude Include="src\public\Scene.hpp" />
     <ClInclude Include="src\public\TestScene.hpp" />
     <ClInclude Include="src\public\Transform.hpp" />
-    <ClInclude Include="src\public\TransformComponent.hpp" />
     <ClInclude Include="src\public\Window\VgineWindow.h" />
     <ClInclude Include="src\public\Rendering\Texture.h" />
   </ItemGroup>

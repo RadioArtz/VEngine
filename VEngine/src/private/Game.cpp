@@ -1,10 +1,13 @@
 #include "Game.hpp"
 #include "TestScene.hpp"
+#include <Transform.hpp>
+#include <GameObject.h>
 
 void RenderEngineMenuBar();
 void RenderSceneHierarchy();
 void RenderImportDialog();
 void RenderEngineUI();
+void DrawHierarchyElement(VEngine::GameObject* go);
 
 GLFWwindow* GLWindow;
 
@@ -99,7 +102,7 @@ void RenderEngineMenuBar()
     }
 }
 
-float loc[3]{ 0,0,0 };
+
 void RenderSceneHierarchy()
 {
     ImGui::Begin("Scene Hierarchy");
@@ -110,33 +113,60 @@ void RenderSceneHierarchy()
         {
             for (VEngine::GameObject* go : scn->gameObjects)
             {
-                ImGui::PushID(go);
-                if (ImGui::TreeNode(go->objectName.c_str()))
+                if (!go->transform.GetParent()) 
                 {
-                    for (VEngine::Component* comp : go->components)
-                    {
-                        if (ImGui::TreeNode(typeid(*comp).name()))
-                        {
-                            if (typeid(*comp) == typeid(VEngine::TransformComponent))
-                            {
-                                VEngine::TransformComponent* transComp = (VEngine::TransformComponent*)comp;
-                                loc[0] = transComp->transform.GetLocation().x;
-                                loc[1] = transComp->transform.GetLocation().y;
-                                loc[2] = transComp->transform.GetLocation().z;
-                                ImGui::DragFloat3("Location", (float*)&loc);
-                                transComp->transform.SetLocation(loc[0], loc[1], loc[2]);
-                            }
-                            ImGui::TreePop();
-                        }
-                    }
-                    ImGui::TreePop();
+                    DrawHierarchyElement(go);
                 }
-                ImGui::PopID();
             }
         }
     }
     ImGui::End();
 }
+
+float loc[3]{ 0,0,0 };
+float rot[3]{ 0,0,0 };
+
+void DrawHierarchyElement(VEngine::GameObject* go)
+{
+    ImGui::PushID(go);
+    if (ImGui::TreeNode(go->objectName.c_str()))
+    {
+        VEngine::Transform* trans = &go->transform;
+        loc[0] = trans->GetLocation().x;
+        loc[1] = trans->GetLocation().y;
+        loc[2] = trans->GetLocation().z;
+        ImGui::DragFloat3("Location", (float*)&loc);
+        trans->SetRelativeLocation(loc[0], loc[1], loc[2]);
+
+        rot[0] = trans->GetRotation().x;
+        rot[1] = trans->GetRotation().y;
+        rot[2] = trans->GetRotation().z;
+        ImGui::DragFloat3("Rotation", (float*)&rot);
+        trans->SetRelativeRotation(rot[0], rot[1], rot[2]);
+
+
+        for (VEngine::Component* comp : go->components)
+        {
+            if (ImGui::TreeNode(typeid(*comp).name()))
+            {
+                if (typeid(*comp) == typeid(VEngine::Component))
+                {
+                    // render stuff depending on component type
+                }
+                ImGui::TreePop();
+            }
+        }
+        ImGui::TreePop();
+    }
+
+    for (VEngine::Transform* trans : go->transform.children)
+    {
+        ImGui::Indent(10.0f);
+        DrawHierarchyElement(trans->owningGameObject);
+    }
+
+    ImGui::PopID();
+};
 
 void RenderImportDialog()
 {

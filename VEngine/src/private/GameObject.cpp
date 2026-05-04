@@ -7,7 +7,7 @@ VEngine::GameObject::GameObject(std::string inName)
 	this->objectName = inName;
 	Scene::activeScenes[0]->RegisterGO(this);
 	owningScene = Scene::activeScenes[0];
-	transform = this->AddComponent<TransformComponent>();
+	transform.SetOwningGameObject(this);
 }
 
 void VEngine::GameObject::OnUpdate(double deltaTime)

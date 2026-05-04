@@ -24,6 +24,7 @@
 #include <backends/imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
 #include <Game.hpp>
+#include <GameObject.h>
 
 namespace VEngine 
 {
@@ -68,6 +69,7 @@ namespace VEngine
 
         void OnBeginPlay() 
         {
+            skibidi.SetParent(&testObject);
             testmaterial = new Material(basicLitDef, false);
 
             PrepareShader(testmaterial, false);
@@ -80,7 +82,7 @@ namespace VEngine
             testmaterial->SetMaterialParam("_EmissiveTex", &emissiveTexture);
             testmaterial->SetMaterialParam("lightPosition", cameraTransform.GetLocation());
 
-            testObject.transform->transform.SetRotation(-90, 0, 180);
+            testObject.transform.SetRelativeRotation(-90, 0, 180);
 
             mouseLastX = EngineWindow->GetWindowSize().x / 2.0f;
             mouseLastY = EngineWindow->GetWindowSize().y / 2.0f;
@@ -98,7 +100,7 @@ namespace VEngine
             float timeValue = glfwGetTime();
         
             rotationRate += deltaTime * 1.0f;
-            testObject.transform->transform.AddRotation(0, 0, deltaTime * 30.0f);
+            //testObject.transform.AddRelativeRotation(0, 0, deltaTime * 30.0f);
 
             //testmaterial->SetMaterialParam("_time", timeValue);
             testLight.specularColor.Intensity = 5.0f;
@@ -111,7 +113,7 @@ namespace VEngine
             testmaterial->SetMaterialParam("specularLightColor", (testLight.specularColor.Color * testLight.specularColor.Intensity));
 
             testmaterial->SetMaterialParam("_viewPos", cameraTransform.GetLocation());
-            testmaterial->SetMaterialParam("_model", testObject.transform->transform.GetTransformMatrix());
+            testmaterial->SetMaterialParam("_model", skibidi.transform.GetTransformMatrix());
             testmaterial->SetMaterialParam("_view", awesomeCamera.GetViewMatrix());
             testmaterial->SetMaterialParam("_projection", awesomeCamera.GetProjectionMatrix());
 
@@ -171,21 +173,21 @@ namespace VEngine
                 cameraSpeed = 5.0f * deltaTime;
 
             if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-                camTrans->AddLocation(cameraSpeed * camTrans->GetForwardVector());
+                camTrans->AddRelativeLocation(cameraSpeed * camTrans->GetForwardVector());
             if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-                camTrans->AddLocation(cameraSpeed * -camTrans->GetForwardVector());
+                camTrans->AddRelativeLocation(cameraSpeed * -camTrans->GetForwardVector());
             if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-                camTrans->AddLocation(cameraSpeed * camTrans->GetRightVector());
+                camTrans->AddRelativeLocation(cameraSpeed * -camTrans->GetRightVector());
             if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-                camTrans->AddLocation(cameraSpeed * -camTrans->GetRightVector());
+                camTrans->AddRelativeLocation(cameraSpeed * camTrans->GetRightVector());
             if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
-                camTrans->AddLocation(cameraSpeed * camTrans->GetUpVector());
+                camTrans->AddRelativeLocation(cameraSpeed * camTrans->GetUpVector());
             if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
-                camTrans->AddLocation(cameraSpeed * -camTrans->GetUpVector());
+                camTrans->AddRelativeLocation(cameraSpeed * -camTrans->GetUpVector());
             if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS)
                 testmaterial->SetMaterialParam("lightPosition", cameraTransform.GetLocation());
 
-            camTrans->AddRotation(-mouseOffsetY, mouseOffsetX, 0);
+            camTrans->AddRelativeRotation(mouseOffsetY, -mouseOffsetX, 0);
             mouseOffsetX = 0;
             mouseOffsetY = 0;
         }
