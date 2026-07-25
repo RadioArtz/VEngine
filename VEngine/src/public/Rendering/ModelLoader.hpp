@@ -11,6 +11,14 @@
 
 namespace VEngine
 {
+    class Material;
+    class Model 
+    {
+    public:
+        std::vector<Mesh> meshes;
+        std::vector<Material*> materials;
+    };
+
     class ModelLoader 
     {
     public:

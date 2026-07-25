@@ -161,6 +161,7 @@
     <ClCompile Include="src\private\Rendering\Texture.cpp" />
     <ClCompile Include="src\private\Game.cpp" />
     <ClCompile Include="src\private\Scene.cpp" />
+    <ClCompile Include="src\private\Rendering\StaticMeshComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Lib\imgui\backends\imgui_impl_glfw.h" />
@@ -190,6 +191,7 @@
     <ClInclude Include="src\public\Transform.hpp" />
     <ClInclude Include="src\public\Window\VgineWindow.h" />
     <ClInclude Include="src\public\Rendering\Texture.h" />
+    <ClInclude Include="src\public\Rendering\StaticMeshComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="content\shaders\unlitDefault.vert">

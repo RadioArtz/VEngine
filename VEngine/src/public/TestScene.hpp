@@ -118,6 +118,7 @@ namespace VEngine
             testmaterial->SetMaterialParam("_projection", awesomeCamera.GetProjectionMatrix());
 
             testmaterial->RenderMaterial();
+
             if (!VEngine::Game::Get().loader.meshes.empty())
                 for (VEngine::Mesh mesh : VEngine::Game::Get().loader.meshes)
                 {

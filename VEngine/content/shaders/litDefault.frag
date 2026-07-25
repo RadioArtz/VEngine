@@ -18,6 +18,15 @@ uniform vec3 specularLightColor;
 uniform float specularHardness;
 uniform vec3 lightPosition;
 
+struct PointLight
+{
+    vec3 Position;
+    vec3 DiffuseColor;
+    float SpecularIntensity;
+    float SpecularHardness;
+    float AttenuationRange;
+};
+
 void main()
 {
     vec4 diffuseTex = texture(_MainTex, TexCoord);
@@ -47,4 +56,15 @@ void main()
     vec3 result = lightResult * diffuseColor * vec3(diffuseTex.x,diffuseTex.y,diffuseTex.z);
 
     FragColor = vec4(result,1.0f) + emissiveTex;
+}
+
+vec3 CalculatePointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewPos)
+{
+    vec3 lightDir = normalize(light.Position - FragPos);  
+    float diff = max(dot(normal, lightDir),0.0f);
+    vec3 viewDir = normalize(_viewPos - FragPos);
+    vec3 reflectDir = reflect(-lightDir, normal);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0f), light.SpecularHardness);
+    
+    return vec3(0.0f);
 }

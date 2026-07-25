@@ -44,6 +44,13 @@ namespace VEngine
 
 		void SetParent(Transform* inParent)
 		{
+			if (parent) 
+			{
+				auto it = std::remove(children.begin(), children.end(), this);
+				if(it != children.end())
+					parent->children.erase(it, children.end());
+			}
+
 			parent = inParent;
 			inParent->children.push_back(this);
 			MarkDirty();

@@ -2,6 +2,7 @@
 #include <Component.hpp>
 #include <vector>
 #include <string>
+#include <Transform.hpp>
 namespace VEngine 
 {
 	class GameObject;
@@ -9,6 +10,7 @@ namespace VEngine
 	{
 	public:
 		std::string sceneName = "default";
+		Transform sceneTransform{};
 		Scene(const std::string inName = "default") { sceneName = inName; RegisterScene(this); };
 		virtual ~Scene() {};
 		std::vector<GameObject*> gameObjects{};

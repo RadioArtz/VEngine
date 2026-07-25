@@ -113,7 +113,7 @@ void RenderSceneHierarchy()
         {
             for (VEngine::GameObject* go : scn->gameObjects)
             {
-                if (!go->transform.GetParent()) 
+                if (!go->transform.GetParent()->owningGameObject) 
                 {
                     DrawHierarchyElement(go);
                 }
@@ -168,12 +168,12 @@ void DrawHierarchyElement(VEngine::GameObject* go)
     ImGui::PopID();
 };
 
+std::string input = "C:/Users/mathi/Downloads/viking_room.obj";
 void RenderImportDialog()
 {
     bool pressed = false;
     ImGui::Begin("Import Model");
     ImGui::SetWindowSize(ImVec2(250, 400));
-    std::string input = "C:/Users/mathi/Downloads/viking_room.obj";
     if (ImGui::Button("Import"))
     {
         pressed = true;
