@@ -12,10 +12,26 @@ VEngine::GameObject::GameObject(std::string inName)
 	transform.SetParent(&owningScene->sceneTransform);
 }
 
+void VEngine::GameObject::OnBeginPlay() 
+{
+	if (hasBegunPlay)
+		return;
+	hasBegunPlay = true;
+	for (Component* comp : components)
+		comp->OnBeginPlay();
+}
+
 void VEngine::GameObject::OnUpdate(double deltaTime)
 {
+	if (!allowTickBeforeBeginPlay && !hasBegunPlay)
+		return;
+
 	for (Component* comp : components) 
-	{
 		comp->OnUpdate(deltaTime);
-	}
+}
+
+void VEngine::GameObject::OnRender(double deltaTime)
+{
+	for (Component* comp : components)
+		comp->OnRender(deltaTime);
 }

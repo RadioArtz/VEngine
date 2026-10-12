@@ -1,14 +1,21 @@
 #pragma once
 #include <glm/glm.hpp>
 #include <Transform.hpp>
+#include <Component.hpp>
+#include <GameObject.h>
 
 namespace VEngine 
 {
-	class Camera
+	class Camera : public Component
 	{
 	public:
-		Camera(Transform* inTransformPtr) { transPtr = inTransformPtr; };
+		Camera() {};
 		~Camera() {};
+
+		virtual void OnAwake() override 
+		{ 
+			transPtr = &owner->transform; 
+		}
 
 	private:
 		glm::mat4 view = glm::mat4(1.0f);

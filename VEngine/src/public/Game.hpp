@@ -25,7 +25,7 @@ namespace VEngine
         }
 
         VgineWindow* EngineWindow;
-    
+        GLFWwindow* GLWindow;
         float deltaTime;
         float lastTime;    
         bool shouldExit;
@@ -34,6 +34,12 @@ namespace VEngine
 
         int EngineInit();
 
+        void RenderEngineUI();
+
+        void RenderEngineMenuBar();
+
         VEngine::ModelLoader loader;
+
+        void RenderMaterialEditor(Material* inMaterial);
     };
 }

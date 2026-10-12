@@ -2,14 +2,14 @@
 #include "TestScene.hpp"
 #include <Transform.hpp>
 #include <GameObject.h>
+#include <Rendering/Material.h>
 
-void RenderEngineMenuBar();
 void RenderSceneHierarchy();
 void RenderImportDialog();
 void RenderEngineUI();
 void DrawHierarchyElement(VEngine::GameObject* go);
 
-GLFWwindow* GLWindow;
+
 
 
 int VEngine::Game::EngineInit()
@@ -19,8 +19,8 @@ int VEngine::Game::EngineInit()
     std::filesystem::current_path(programRoot);
 
     glfwInit();
-    EngineWindow = new VgineWindow();
-    GLWindow = EngineWindow->GetInternalGLFWwindow();
+    Game::Get().EngineWindow = new VgineWindow();
+    Game::Get().GLWindow = Game::Get().EngineWindow->GetInternalGLFWwindow();
 
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO();
@@ -29,15 +29,15 @@ int VEngine::Game::EngineInit()
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
     io.ConfigFlags |= ImGuiConfigFlags_IsSRGB;
 
-    ImGui_ImplGlfw_InitForOpenGL(GLWindow, true);
+    ImGui_ImplGlfw_InitForOpenGL(Game::Get().GLWindow, true);
     ImGui_ImplOpenGL3_Init();
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_FRAMEBUFFER_SRGB);
     Awesomescene = new TestScene{ "Test Scene" };
-    Awesomescene->EngineWindow = EngineWindow;
+    Awesomescene->EngineWindow = Game::Get().EngineWindow;
     Awesomescene->OnBeginPlay();
 
-    while (!glfwWindowShouldClose(GLWindow))
+    while (!glfwWindowShouldClose(Game::Get().GLWindow))
     {
         deltaTime = glfwGetTime() - lastTime;
         lastTime = glfwGetTime();
@@ -53,7 +53,7 @@ int VEngine::Game::EngineInit()
         Awesomescene->OnUpdate(deltaTime);
         Awesomescene->OnRender(deltaTime);
 
-        glfwSwapBuffers(GLWindow);
+        glfwSwapBuffers(Game::Get().GLWindow);
     }
 
     ImGui_ImplOpenGL3_Shutdown();
@@ -67,23 +67,23 @@ int VEngine::Game::EngineInit()
 
 bool ImportDialogOpen = false;
 
-void RenderEngineUI() 
+void VEngine::Game::RenderEngineUI() 
 {
     RenderEngineMenuBar();
     RenderSceneHierarchy();
-
+    
     if (ImportDialogOpen)
         RenderImportDialog();
 }
 
-void RenderEngineMenuBar() 
+void VEngine::Game::RenderEngineMenuBar()
 {
     if (ImGui::BeginMainMenuBar()) 
     {
         if (ImGui::BeginMenu("File")) 
         {
             if (ImGui::MenuItem("Import Asset")) { ImportDialogOpen =! ImportDialogOpen; }
-            if (ImGui::MenuItem("Exit Engine")) { glfwSetWindowShouldClose(GLWindow, true); }
+            if (ImGui::MenuItem("Exit Engine")) { glfwSetWindowShouldClose(Game::Get().GLWindow, true); }
             ImGui::EndMenu();
         }
         if (ImGui::BeginMenu("Create")) 
@@ -185,3 +185,10 @@ void RenderImportDialog()
 
     ImGui::End();
 };
+
+void VEngine::Game::RenderMaterialEditor(Material* inMaterial)
+{
+    ImGui::Begin("Adjust Material");
+    ImGui::SetWindowSize(ImVec2(400, 250));
+
+}

@@ -9,26 +9,34 @@ namespace VEngine
 {
 	class GameObject 
 	{
+
+	private:
+		bool hasBegunPlay = false;
 	public:
 		std::string objectName = "GameObject";
 		std::vector<Component*> components{};
 		GameObject(std::string inName = "GameObject");
 		~GameObject() {};
 		Transform transform;
+		bool allowTickBeforeBeginPlay = false;
 
 	protected:
 		class Scene* owningScene = nullptr;
 
 	public:
-		void OnAwake() {};
-		void OnBeginPlay() {};
+		void OnAwake();
+		void OnBeginPlay();
 		void OnUpdate(double deltaTime);
-		void OnConstruct() {};
+		void OnRender(double deltaTime);
 
 		template <std::derived_from<Component> T, typename... Args> T* AddComponent(Args&&... args)
 		{
 			T* comp = new T(std::forward<Args>(args)...);
+			comp->owner = this;
 			components.push_back(comp);
+			comp->OnAwake();
+			if(hasBegunPlay)
+				comp->OnBeginPlay();
 			return comp;
 		};
 
@@ -37,7 +45,7 @@ namespace VEngine
 			for(Component* comp : components)
 			{
 				if (typeid(*comp) == typeid(T))
-					return comp;
+					return static_cast<T*>(comp);
 			}
 			return nullptr;
 		};

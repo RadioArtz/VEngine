@@ -23,7 +23,7 @@ namespace VEngine
     {
     public:
         std::string directory;
-        std::vector<Mesh> meshes;
+        std::vector<std::shared_ptr<Mesh>> meshes;
 
         void loadModel(std::string path)
         {
@@ -54,7 +54,7 @@ namespace VEngine
             }
         }
 
-        Mesh processMesh(aiMesh* mesh, const aiScene* scene)
+        std::shared_ptr<Mesh> processMesh(aiMesh* mesh, const aiScene* scene)
         {
             std::vector<Vertex> vertices;
             std::vector<unsigned int> indices;
@@ -102,7 +102,7 @@ namespace VEngine
                 std::cout << (scene->mMaterials[mesh->mMaterialIndex]->GetName()).C_Str() << std::endl;
             }
 
-            return Mesh(vertices, indices);
+            return std::make_shared<Mesh>(vertices, indices);
         }
     };
 }
