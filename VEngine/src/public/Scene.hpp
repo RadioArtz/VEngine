@@ -10,19 +10,14 @@ namespace VEngine
 	class Scene 
 	{
 	private:
-		bool hasBegunPlay;
+		bool hasBegunPlay = false;
 	public:
 		std::string sceneName = "default";
 		Transform sceneTransform{};
 		Scene(const std::string inName = "default") { sceneName = inName; RegisterScene(this); };
 		virtual ~Scene() {};
 		std::vector<GameObject*> gameObjects{};
-		void RegisterGO( GameObject* inGO) 
-		{ 
-			gameObjects.push_back(inGO); 
-			if (hasBegunPlay)
-				inGO->OnBeginPlay();
-		};
+		void RegisterGO(GameObject* inGO);
 		virtual void OnRender(double deltaTime);
 		virtual void OnUpdate(double deltaTime);
 		virtual void OnBeginPlay();

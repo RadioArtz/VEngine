@@ -47,7 +47,7 @@ namespace VEngine
         GameObject testObject = GameObject{ "Test GameObject" };
         GameObject testChild = GameObject{ "Test ChildNode" };
 
-        void OnBeginPlay() 
+        void OnBeginPlay() override
         {
             cameraObject.AddComponent<Camera>();
             cameraObject.AddComponent<FreeCamControler>();
@@ -72,7 +72,7 @@ namespace VEngine
         }
 
         bool meshApplied = false;;
-        void OnUpdate(double deltaTime)
+        void OnUpdate(double deltaTime) override
         {
             Scene::OnUpdate(deltaTime);
             RenderUI();
@@ -85,9 +85,9 @@ namespace VEngine
                 
 
             InputTick(EngineWindow->GetInternalGLFWwindow(), deltaTime);
-        }
+        } 
 
-        void OnRender(float deltaTime) 
+        void OnRender(double deltaTime) override
         {
             float timeValue = glfwGetTime();
         
@@ -118,7 +118,7 @@ namespace VEngine
         {
         }
 
-        void InputTick(GLFWwindow* window, float deltaTime)
+        void InputTick(GLFWwindow* window, double deltaTime)
         {
 
             if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
