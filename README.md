@@ -21,14 +21,14 @@ build Assimp with CMake yourself.
 
 For the itch.io download make sure to copy the following files:
 ```text
-Assimp/include/assimp/*                   -> Lib/include/assimp/
-Assimp/lib/x64/assimp-vc145-mt.lib			-> Lib/library/
-Assimp/bin/x64/assimp-vc145-mt.dll			-> Lib/library/
+Assimp/include/assimp/*				-> Lib/include/assimp/
+Assimp/lib/x64/assimp-vc145-mt.lib		-> Lib/library/
+Assimp/bin/x64/assimp-vc145-mt.dll		-> Lib/library/
 ```
 
 if you build with CMake:
 ```text
-Assimp/include/assimp/*						   -> Lib/include/assimp/
+Assimp/include/assimp/*				-> Lib/include/assimp/
 Assimp/lib/Debug/assimp-vc145-mt.lib		-> Lib/library/
 Assimp/bin/Debug/assimp-vc145-mt.dll		-> Lib/library/
 ```
